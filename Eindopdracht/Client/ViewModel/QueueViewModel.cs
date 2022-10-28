@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Client.Command;
 using MvvmHelpers;
@@ -16,21 +17,11 @@ public class QueueViewModel : ObservableObject
     public QueueViewModel(Client_ client, NavigationStore navigationStore)
     {
         _client = client;
-        _client.ViewModel = this;
+        _client.addViewModel(this);
         _navStore = navigationStore;
 
         JoinGame = new JoinGameCommand(this, 
             new NavigationService<ClientViewModel>(navigationStore, 
                 () => new ClientViewModel(client)));
-    }
-    
-    public string CurrentUserName
-    {
-        get => _username;
-        set
-        {
-            _username = value;
-            OnPropertyChanged();
-        }
     }
 }

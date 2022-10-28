@@ -4,5 +4,5 @@ namespace Client;
 
 public interface IServerCommand
 {
-    void OnCommandReceived(JObject packet, Client_ parent);
+    void OnCommandReceivedAsync(JObject packet, Client_ parent);
 }

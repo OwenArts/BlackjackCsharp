@@ -28,7 +28,7 @@ public class ClientConnect : ICommandAction
             return;
         }
 
-        if (parent.Parent.Clients.Count >= 4)
+        if (parent.Parent.Clients.Count > 4)
         {
             parent.SendMessage(SendReplacedObject("status", 2, 1, "Response\\clientconnected.json")!);
             parent.SelfDestruct(true);

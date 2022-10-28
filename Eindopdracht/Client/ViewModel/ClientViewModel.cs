@@ -19,7 +19,7 @@ public class ClientViewModel : ObservableObject
     public ClientViewModel(Client_ client)
     {
         _client = client;
-        _client.ViewModel = this;
+        _client.addViewModel(this);
         // _chatMessages = new ObservableCollection<string>();
         // EmergencyStop = new EmergencyStopCommand(_client, this);
     }

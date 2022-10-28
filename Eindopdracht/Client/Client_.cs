@@ -30,7 +30,6 @@ public class Client_
     public string Username { get; set; }
     public string Password { get; set; }
     public bool LoggedIn { get; set; }
-    public bool Queued { get; set; }
 
     public Client_()
     {
@@ -43,14 +42,14 @@ public class Client_
     {
         if (_tcpClient.Connected)
             return;
-        
-        
+
+
         var attempts = 0;
 
         while (attempts < 5)
         {
             attempts++;
-            
+
             _log.Information($"Connecting to {ip}:{Port} (attempt #{attempts})");
 
             try
@@ -73,7 +72,7 @@ public class Client_
 
                 _log.Error(ex, $"Could not connect to {ip}:{Port} ... retrying");
             }
-            
+
             await Task.Delay(1000);
         }
     }
@@ -97,7 +96,7 @@ public class Client_
                 _totalBuffer = Array.Empty<byte>();
 
                 if (_commands.ContainsKey(data["id"]!.ToObject<string>()!))
-                    _commands[data["id"]!.ToObject<string>()!].OnCommandReceived(data, this);
+                    _commands[data["id"]!.ToObject<string>()!].OnCommandReceivedAsync(data, this);
 
                 break;
             }
@@ -141,6 +140,11 @@ public class Client_
         _commands.Add("client/connected", new ClientConnected());
     }
 
+    public void addViewModel(ObservableObject viewModel)
+    {
+        ViewModel = viewModel;
+    }
+
     public async Task AskForLoginAsync()
     {
         SendData(SendReplacedObject("username", Username, 1, SendReplacedObject(
@@ -148,8 +152,18 @@ public class Client_
         ))!);
     }
 
-    public async Task RequestQueueDataAsync()
+    public void ExitQueue()
     {
-        // throw new NotImplementedException();
+        try
+        {
+            var queueViewModel = (QueueViewModel)ViewModel;
+            if (queueViewModel.JoinGame.CanExecute(null))
+                queueViewModel.JoinGame.Execute(null);
+        }
+        catch (Exception e)
+        {
+            _log.Error(e, "Unable to exit queue");
+            throw;
+        }
     }
 }

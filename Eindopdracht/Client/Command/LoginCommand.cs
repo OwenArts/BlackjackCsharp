@@ -52,9 +52,6 @@ public class LoginCommand : BaseCommand
             
             if (_loginWindowViewModel.Client.LoggedIn)
             {
-                await _loginWindowViewModel.Client.RequestQueueDataAsync();
-                await Task.Delay(1000);
-
                 _navigationService.Navigate();
             }
         }
