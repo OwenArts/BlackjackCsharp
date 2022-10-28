@@ -6,6 +6,7 @@ using System.Windows;
 using Client.ServerCommands;
 using Client.ViewModel;
 using Common;
+using MvvmHelpers;
 using Newtonsoft.Json.Linq;
 using static Common.Cryptographer;
 using static Common.Util;
@@ -24,7 +25,7 @@ public class Client_
     private byte[] _totalBuffer = Array.Empty<byte>();
     private readonly byte[] _buffer = new byte[1024];
 
-    public ClientViewModel ViewModel { get; set; }
+    public ObservableObject ViewModel { get; set; }
 
     public string Username { get; set; }
     public string Password { get; set; }
@@ -41,14 +42,14 @@ public class Client_
     {
         if (_tcpClient.Connected)
             return;
-        
-        
+
+
         var attempts = 0;
 
         while (attempts < 5)
         {
             attempts++;
-            
+
             _log.Information($"Connecting to {ip}:{Port} (attempt #{attempts})");
 
             try
@@ -71,7 +72,7 @@ public class Client_
 
                 _log.Error(ex, $"Could not connect to {ip}:{Port} ... retrying");
             }
-            
+
             await Task.Delay(1000);
         }
     }
@@ -95,7 +96,7 @@ public class Client_
                 _totalBuffer = Array.Empty<byte>();
 
                 if (_commands.ContainsKey(data["id"]!.ToObject<string>()!))
-                    _commands[data["id"]!.ToObject<string>()!].OnCommandReceived(data, this);
+                    _commands[data["id"]!.ToObject<string>()!].OnCommandReceivedAsync(data, this);
 
                 break;
             }
@@ -134,6 +135,16 @@ public class Client_
         _tcpClient.Close();
     }
 
+    private void InitCommands()
+    {
+        _commands.Add("client/connected", new ClientConnected());
+    }
+
+    public void addViewModel(ObservableObject viewModel)
+    {
+        ViewModel = viewModel;
+    }
+
     public async Task AskForLoginAsync()
     {
         SendData(SendReplacedObject("username", Username, 1, SendReplacedObject(
@@ -141,8 +152,18 @@ public class Client_
         ))!);
     }
 
-    private void InitCommands()
+    public void ExitQueue()
     {
-        _commands.Add("client/connected", new ClientConnected());
+        try
+        {
+            var queueViewModel = (QueueViewModel)ViewModel;
+            if (queueViewModel.JoinGame.CanExecute(null))
+                queueViewModel.JoinGame.Execute(null);
+        }
+        catch (Exception e)
+        {
+            _log.Error(e, "Unable to exit queue");
+            throw;
+        }
     }
 }

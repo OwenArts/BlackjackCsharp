@@ -14,23 +14,23 @@ public class ClientViewModel : ObservableObject
     
     // public ObservableCollection<string> _chatMessages;
     
-    private string username;
+    private string _username;
 
-    public ClientViewModel(Client_ client, NavigationStore navStore)
+    public ClientViewModel(Client_ client)
     {
         _client = client;
-        _client.ViewModel = this;
+        _client.addViewModel(this);
         // _chatMessages = new ObservableCollection<string>();
         // EmergencyStop = new EmergencyStopCommand(_client, this);
     }
     
     public string CurrentUserName
     {
-        get => username;
+        get => _username;
         set
         {
-            username = value;
-            OnPropertyChanged(nameof(CurrentUserName));
+            _username = value;
+            OnPropertyChanged();
         }
     }
 
