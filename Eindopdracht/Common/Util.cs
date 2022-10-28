@@ -6,8 +6,10 @@ namespace Common;
 public static class Util
 {
     private static readonly string PathDir =
-        Environment.CurrentDirectory.Substring(0,
-            Environment.CurrentDirectory.LastIndexOf("EindOpdracht", StringComparison.Ordinal));
+        Path.Combine(Environment.CurrentDirectory.Substring(0, Environment.CurrentDirectory.LastIndexOf("Eindopdracht", StringComparison.Ordinal)),
+            "Eindopdracht\\Common\\Packets\\");
+        // Environment.CurrentDirectory.Substring(0,
+        //     Environment.CurrentDirectory.LastIndexOf("Common", StringComparison.Ordinal)) + "\\Packets\\";
     
     public static byte[] Concat(byte[] b1, byte[] b2, int count)
     {
@@ -24,6 +26,8 @@ public static class Util
     
     public static JObject? SendReplacedObject<TR, TO>(string variable, TR replacement, int position, TO targetObject)
     {
+        Log.Send().Information(PathDir);
+        
         var data = targetObject switch
         {
             string => (JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText(PathDir + targetObject))),

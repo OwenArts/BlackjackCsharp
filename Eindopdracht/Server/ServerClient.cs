@@ -1,4 +1,5 @@
 ﻿using System.Net.Sockets;
+using Common;
 using Newtonsoft.Json.Linq;
 using Server.CommandHandlers;
 using static Common.Util;
@@ -17,6 +18,7 @@ public class ServerClient
     private byte[] _totalBuffer = Array.Empty<byte>();
     private readonly byte[] _buffer = new byte[1024];
 
+    public Log _log = new Log(typeof(ServerClient));
     public string Username { get; set; }
 
     public ServerClient(TcpClient tcp, ServerSocket parent)
@@ -50,6 +52,7 @@ public class ServerClient
             while (_totalBuffer.Length >= 4)
             {
                 JObject data = GetDecryptedMessage(_totalBuffer);
+                _log.Debug(data.ToString());
                 _totalBuffer = Array.Empty<byte>();
                 
                 if(_commands.ContainsKey(data["id"]!.ToObject<string>()!))

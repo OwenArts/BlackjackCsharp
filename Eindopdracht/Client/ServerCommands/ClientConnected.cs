@@ -11,7 +11,7 @@ public class ClientConnected : IServerCommand
         switch (status)
         {
             case 0:
-                parent.LogIn();
+                MessageBox.Show("login succesful");
                 return;
             case 1:
                 MessageBox.Show("Er is al een account met deze gebruikersnaam ingelogd");

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Common;
+using Newtonsoft.Json.Linq;
 using static Common.Util;
 
 namespace Server.CommandHandlers;
@@ -9,11 +10,11 @@ public class ClientConnect : ICommandAction
     {
         var username = packet["data"]!["username"]!.ToObject<string>()!;
         var password = packet["data"]!["password"]!.ToObject<string>()!;
-        var allUsers = GetJson("storage\\accounts.json")["accounts"]!.ToObject<string[][]>()!;
+        var allUsers = GetJson("Storage\\accounts.json")["accounts"]!.ToObject<string[][]>()!;
 
         if (parent.Parent.Clients.Any(client => client.Username == username))
         {
-            parent.SendMessage(SendReplacedObject("status", 1, 1, "server\\packets\\clientconnected.json")!);
+            parent.SendMessage(SendReplacedObject("status", 1, 1, "Response\\clientconnected.json")!);
             parent.SelfDestruct(true);
             return;
         }
@@ -22,20 +23,20 @@ public class ClientConnect : ICommandAction
 
         if (!exists)
         {
-            parent.SendMessage(SendReplacedObject("status", 3, 1, "server\\packets\\clientconnected.json")!);
+            parent.SendMessage(SendReplacedObject("status", 3, 1, "Response\\clientconnected.json")!);
             parent.SelfDestruct(true);
             return;
         }
 
         if (parent.Parent.Clients.Count >= 4)
         {
-            parent.SendMessage(SendReplacedObject("status", 2, 1, "server\\packets\\clientconnected.json")!);
+            parent.SendMessage(SendReplacedObject("status", 2, 1, "Response\\clientconnected.json")!);
             parent.SelfDestruct(true);
             return;
         }
 
         parent.Username = username;
-        
-        parent.SendMessage(SendReplacedObject("status", 0, 1, "server\\packets\\clientconnected.json")!);
+        Log.Send().Information("Login Successful");
+        parent.SendMessage(SendReplacedObject("status", 0, 1, "Response\\clientconnected.json")!);
     }
 }

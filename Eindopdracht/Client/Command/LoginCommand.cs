@@ -1,15 +1,13 @@
 using System;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Controls;
+using Client.Commands;
 using Client.ViewModel;
 using Common;
 
-namespace Client.Commands;
+namespace Client.Command;
 
 public class LoginCommand : BaseCommand
 {
-    private readonly NavigationStore _navigationStore;
     private readonly LoginWindowViewModel _loginWindowViewModel;
     private readonly NavigationService<ClientViewModel> _navigationService;
 
@@ -35,8 +33,8 @@ public class LoginCommand : BaseCommand
         _log.Debug(
             $"Login button has been pressed at {System.DateTime.Now} \r\nValues are: " +
             $"{_loginWindowViewModel.Username} and {_loginWindowViewModel.SecureStringToString(_loginWindowViewModel.SecurePassword)}");
-
-        await _loginWindowViewModel.Client.MakeConnectionAsync("localhost", 7492);
+            
+        await _loginWindowViewModel.Client.MakeConnectionAsync("localhost");
 
         if (!_loginWindowViewModel.Client.LoggedIn)
         {
@@ -46,22 +44,12 @@ public class LoginCommand : BaseCommand
 
             try
             {
-                new Thread(async () => { await _loginWindowViewModel.Client.AskForLoginAsync(); }).Start();
+                await _loginWindowViewModel.Client.AskForLoginAsync();
             }
             catch (Exception exception)
             {
                 _log.Error(exception, "Could not start new Thread asking to login");
                 throw;
-            }
-
-            await Task.Delay(1000);
-
-            if (_loginWindowViewModel.Client.LoggedIn)
-            {
-                // await _loginWindowViewModel.Client.RequestPatientDataAsync();
-                await Task.Delay(1000);
-
-                _navigationService.Navigate();
             }
         }
     }
