@@ -1,8 +1,6 @@
 {
   "id": "client/connected",
   "data": {
-    "status": 1,
-    "clients": [],
-    "message": "hello world"
+    "status": 1
   }
 }

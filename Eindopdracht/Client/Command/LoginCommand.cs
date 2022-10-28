@@ -21,9 +21,9 @@ public class LoginCommand : BaseCommand
         _navigationService = navigationService;
     }
 
-    public override void Execute(object? parameter)
+    public override async void Execute(object? parameter)
     { 
-        ExecuteAsync();
+        await ExecuteAsync();
     }
 
     /// <summary>
@@ -32,7 +32,7 @@ public class LoginCommand : BaseCommand
     /// </summary>
     public override async Task ExecuteAsync()
     {
-        await _loginWindowViewModel.Client.MakeConnectionAsync("localhost", 7492);
+        await _loginWindowViewModel.Client.MakeConnectionAsync("localhost");
 
         if (!_loginWindowViewModel.Client.LoggedIn)
         {

@@ -7,8 +7,7 @@ public static class Util
 {
     private static readonly string PathDir =
         Environment.CurrentDirectory.Substring(0,
-            Environment.CurrentDirectory.LastIndexOf("EindOpdracht", StringComparison.Ordinal)) +
-        "Server\\";
+            Environment.CurrentDirectory.LastIndexOf("EindOpdracht", StringComparison.Ordinal));
     
     public static byte[] Concat(byte[] b1, byte[] b2, int count)
     {
