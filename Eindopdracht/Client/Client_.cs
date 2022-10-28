@@ -139,11 +139,6 @@ public class Client_
         _tcpClient.Close();
     }
 
-    private void InitCommands()
-    {
-        _commands.Add("client/connected", new ClientConnected());
-    }
-
     public void addViewModel(ObservableObject viewModel)
     {
         ViewModel = viewModel;
@@ -169,6 +164,20 @@ public class Client_
             _log.Error(e, "Unable to exit queue");
             throw;
         }
+    }
+    
+    
+    private void InitCommands()
+    {
+        _commands.Add("client/connected", new ClientConnected());
+        _commands.Add("client/disconnect", new Disconnected());
+        _commands.Add("client/givecard", new GiveCard());
+        _commands.Add("client/clientconnect", new ClientConnect());
+        _commands.Add("client/returnclients", new ReturnClients());
+        _commands.Add("client/giveturn", new GiveTurn());
+        _commands.Add("client/gobust", new GoBust());
+        _commands.Add("client/invalidbet", new InvalidBet());
+        _commands.Add("client/winstatus", new WinStatus());
     }
 
     public async Task CreateAccountAsync()
