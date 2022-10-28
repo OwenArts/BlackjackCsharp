@@ -1,0 +1,9 @@
+{
+  "id": "client/givecard",
+  "data":{
+    "piece": -1,
+    "suite": -1, 
+    "value": -1,
+    "user": ""
+  }
+}

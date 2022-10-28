@@ -122,11 +122,11 @@ public class Client_
         }
     }
 
-    public void Stop()
+    public void Stop(bool destruct = false)
     {
         if (!_tcpClient.Connected) return;
         LoggedIn = false;
-        SendData(GetJson("Client\\Packets\\disconnect.json"));
+        SendData(SendReplacedObject("destruct", destruct, 1, "Requests\\disconnect.json")!);
     }
 
     public void SelfDestruct()

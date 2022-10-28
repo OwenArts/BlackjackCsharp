@@ -1,6 +1,7 @@
 {
   "id": "client/connected",
   "data": {
-    "status": 1
+    "status": 1,
+    "pos": -1
   }
 }
