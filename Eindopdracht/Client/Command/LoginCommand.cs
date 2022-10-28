@@ -21,9 +21,9 @@ public class LoginCommand : BaseCommand
         _navigationService = navigationService;
     }
 
-    public override void Execute(object? parameter)
-    {
-        ExecuteAsync();
+    public override async void Execute(object? parameter)
+    { 
+        await ExecuteAsync();
     }
 
     /// <summary>
