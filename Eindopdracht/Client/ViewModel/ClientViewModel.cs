@@ -16,7 +16,7 @@ public class ClientViewModel : ObservableObject
     
     private string username;
 
-    public ClientViewModel(Client_ client)
+    public ClientViewModel(Client_ client, NavigationStore navStore)
     {
         _client = client;
         _client.ViewModel = this;

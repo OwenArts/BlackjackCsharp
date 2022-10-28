@@ -11,20 +11,18 @@ namespace Client.ViewModel;
 public class LoginWindowViewModel : ObservableObject
 {
     public Client_ Client;
-    public ICommand LogIn { get; }
+    public ICommand LogInButton { get; }
 
     private string _username;
     private SecureString _password;
-    private readonly string _imagePath;
 
     /* This is the constructor of the LoginWindowViewModel. It creates a new Client and a new LoginCommand. */
     public LoginWindowViewModel(NavigationStore navigationStore)
     {
         Client = new();
-        _imagePath = Path.Combine(Environment.CurrentDirectory, "Image", "Background.png");
-        LogIn = new LoginCommand(this, 
+        LogInButton = new LoginCommand(this, 
             new NavigationService<ClientViewModel>(navigationStore, 
-            () => new ClientViewModel(Client)));
+            () => new ClientViewModel(Client, navigationStore)));
     }
 
     public string Username
@@ -37,11 +35,6 @@ public class LoginWindowViewModel : ObservableObject
     {
         get => _password;
         set => _password = value;
-    }
-
-    public string ImageSource
-    {
-        get => _imagePath;
     }
     
     /// <summary>
