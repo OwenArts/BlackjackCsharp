@@ -8,18 +8,28 @@ namespace Client.ViewModel;
 
 public class ClientViewModel : ObservableObject
 {
+
+
     private Client_ _client;
     private Log _log = new Log(typeof(ClientViewModel));
+
+    private ObservableCollection<string> _dealerCards;
+    private ObservableCollection<string> _player1Cards;
+    private ObservableCollection<string> _player2Cards;
+    private ObservableCollection<string> _player3Cards;
+    private ObservableCollection<string> _player4Cards;
     // public ICommand EmergencyStop { get; }
     
     // public ObservableCollection<string> _chatMessages;
     
     private string _username;
+    private string _score;
 
     public ClientViewModel(Client_ client)
     {
         _client = client;
         _client.addViewModel(this);
+        _score = "0";
         // _chatMessages = new ObservableCollection<string>();
         // EmergencyStop = new EmergencyStopCommand(_client, this);
     }
@@ -30,6 +40,16 @@ public class ClientViewModel : ObservableObject
         set
         {
             _username = value;
+            OnPropertyChanged();
+        }
+    }
+    
+    public string Score
+    {
+        get => _score;
+        set
+        {
+            _score = value;
             OnPropertyChanged();
         }
     }
