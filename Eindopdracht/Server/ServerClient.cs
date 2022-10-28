@@ -156,11 +156,14 @@ public class ServerClient
 
     public void Play()
     {
-        List<string> activeClients = new();
+        Dictionary<string, int> activeClients = new();
+        int count = 0;
         foreach (var client in Parent.Clients.Where(client => client.IsPlaying))
         {
+            if (count < 4) count++;
+            
             client.SendMessage(SendReplacedObject("user", Username, 1, "Response\\clientconnect.json")!);
-            activeClients.Add(client.Username);
+            activeClients.Add(client.Username, count);
         }
         
         SendMessage(SendReplacedObject("clients", activeClients.ToArray(), 1, "Response\\returnclients.json")!);
