@@ -1,3 +1,4 @@
+using Common;
 using Newtonsoft.Json.Linq;
 using static Common.Util;
 
@@ -7,6 +8,7 @@ public class CreateAccount : ICommandAction
 {
     public void OnCommandReceived(JObject packet, ServerClient parent)
     {
+        Log.Send().Debug($"OnCommandReceived entered, {packet}");
         var username = packet["data"]!["username"]!.ToObject<string>()!;
         var password = packet["data"]!["password"]!.ToObject<string>()!;
         var oAccounts = GetJson("Storage\\accounts.json");
@@ -27,10 +29,12 @@ public class CreateAccount : ICommandAction
         }
 
         oAccounts["accounts"] = jArray;
+        
+        Log.Send().Debug($"Writing to Acounts.json: {oAccounts}");
 
         WriteJson(oAccounts, "Storage\\accounts.json");
         parent.SendMessage(SendReplacedObject("status", 1, 1, "Response\\accountcreated.json")!);
         
-        parent.SelfDestruct(true);
+        // parent.SelfDestruct(true);
     }
 }

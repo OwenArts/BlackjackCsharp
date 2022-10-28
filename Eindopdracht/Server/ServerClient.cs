@@ -48,6 +48,7 @@ public class ServerClient
 
     public void SendMessage(JObject packet)
     {
+        _log.Debug($"SendMessage: {packet}");
         byte[] encryptedMessage = GetEncryptedMessage(packet);
         _stream.Write(encryptedMessage, 0, encryptedMessage.Length);
     }
@@ -62,7 +63,7 @@ public class ServerClient
             while (_totalBuffer.Length >= 4)
             {
                 JObject data = GetDecryptedMessage(_totalBuffer);
-                _log.Debug(data.ToString());
+                _log.Debug($"OnRead: {data}");
                 _totalBuffer = Array.Empty<byte>();
                 
                 if(_commands.ContainsKey(data["id"]!.ToObject<string>()!))
@@ -215,6 +216,6 @@ public class ServerClient
         _commands.Add("server/doubledown", new DoubleDown());
         _commands.Add("server/requestcard", new RequestCard());
         _commands.Add("server/placebet", new PlacedBet());
-        _commands.Add("clients/createaccount", new CreateAccount());
+        _commands.Add("client/createaccount", new CreateAccount());
     }
 }

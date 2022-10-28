@@ -6,6 +6,6 @@ public class ReturnClients : IServerCommand
 {
     public void OnCommandReceivedAsync(JObject packet, Client_ parent)
     {
-        throw new System.NotImplementedException();
+        // throw new System.NotImplementedException();
     }
 }
