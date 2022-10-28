@@ -7,14 +7,18 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <Grid.Background>
-            <ImageBrush ImageSource="/Image/Background.png" Stretch="UniformToFill"></ImageBrush>
+            <ImageBrush ImageSource="/Image/Blackjack_texture.png" Stretch="UniformToFill"></ImageBrush>
         </Grid.Background>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200"></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="30"></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
             <RowDefinition></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>

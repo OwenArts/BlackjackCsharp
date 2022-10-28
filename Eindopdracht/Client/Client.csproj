@@ -22,6 +22,8 @@
       <Resource Include="Image\Background.png" />
       <None Remove="Image\loading.gif" />
       <Resource Include="Image\loading.gif" />
+      <None Remove="Image\Blackjack_texture.png" />
+      <Resource Include="Image\Blackjack_texture.png" />
     </ItemGroup>
 
 </Project>

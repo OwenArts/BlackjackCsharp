@@ -21,11 +21,11 @@ public class LoginWindowViewModel : ObservableObject
     public LoginWindowViewModel(NavigationStore navigationStore)
     {
         Client = navigationStore.Client;
-        LogIn = new LoginCommand(this, 
-            new NavigationService<QueueViewModel>(navigationStore, 
-            () => new QueueViewModel(Client, navigationStore)));
-        CreateAccount = new CreateAccountCommand(this, 
-            new NavigationService<QueueViewModel>(navigationStore, 
+        LogIn = new LoginCommand(this,
+            new NavigationService<QueueViewModel>(navigationStore,
+                () => new QueueViewModel(Client, navigationStore)));
+        CreateAccount = new CreateAccountCommand(this,
+            new NavigationService<QueueViewModel>(navigationStore,
                 () => new QueueViewModel(Client, navigationStore)));
     }
 
@@ -35,7 +35,7 @@ public class LoginWindowViewModel : ObservableObject
         {
             if (_username != null && _username.Length > 0)
                 return _username;
-            else 
+            else
                 return "";
         }
         set => _username = value;
@@ -43,22 +43,16 @@ public class LoginWindowViewModel : ObservableObject
 
     public SecureString SecurePassword
     {
-        get => _password;
+        get
+        {
+            if (_password != null)
+                return _password;
+            else
+                return null;
+        }
         set => _password = value;
     }
 
-    /// <summary>
-    /// "Convert a SecureString to a string by copying the SecureString to unmanaged memory, then copying the unmanaged
-    /// memory to a managed string, then zeroing out the unmanaged memory."
-    /// 
-    /// The first thing to notice is that the function returns a string.  This is the string that you want to use in your
-    /// code.  The SecureString is only used to get the string.  The SecureString is not used in the code that uses the
-    /// string
-    /// </summary>
-    /// <param name="value">The SecureString object that you want to convert to a string.</param>
-    /// <returns>
-    /// A string
-    /// </returns>
     public string SecureStringToString(SecureString value)
     {
         IntPtr valuePtr = IntPtr.Zero;
