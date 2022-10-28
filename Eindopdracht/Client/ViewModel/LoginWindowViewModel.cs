@@ -17,7 +17,6 @@ public class LoginWindowViewModel : ObservableObject
     private string _username;
     private SecureString _password;
 
-    /* This is the constructor of the LoginWindowViewModel. It creates a new Client and a new LoginCommand. */
     public LoginWindowViewModel(NavigationStore navigationStore)
     {
         Client = new();

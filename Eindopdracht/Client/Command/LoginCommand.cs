@@ -30,10 +30,6 @@ public class LoginCommand : BaseCommand
     /// </summary>
     public override async Task ExecuteAsync()
     {
-        _log.Debug(
-            $"Login button has been pressed at {System.DateTime.Now} \r\nValues are: " +
-            $"{_loginWindowViewModel.Username} and {_loginWindowViewModel.SecureStringToString(_loginWindowViewModel.SecurePassword)}");
-            
         await _loginWindowViewModel.Client.MakeConnectionAsync("localhost");
 
         if (!_loginWindowViewModel.Client.LoggedIn)
