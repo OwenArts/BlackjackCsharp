@@ -1,3 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
-Console.WriteLine("Hello, World!");
+using Server;
+
+var socket = new ServerSocket();
+
+await Task.Delay(-1);
