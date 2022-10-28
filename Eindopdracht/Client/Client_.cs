@@ -34,13 +34,15 @@ public class Client_
     {
         _commands = new Dictionary<string, IServerCommand>();
         InitCommands();
+        _tcpClient = new TcpClient();
     }
 
     public async Task MakeConnectionAsync(string ip)
     {
         if (_tcpClient.Connected)
             return;
-
+        
+        
         var attempts = 0;
 
         while (attempts < 5)
@@ -76,7 +78,6 @@ public class Client_
 
     private async Task Connect(string ip)
     {
-        _tcpClient = new TcpClient();
         await _tcpClient.ConnectAsync(ip, Port);
         _stream = _tcpClient.GetStream();
     }
@@ -120,12 +121,6 @@ public class Client_
         }
     }
 
-    public void LogIn()
-    {
-        LoggedIn = true;
-        MessageBox.Show("Vanaf hier verder");
-    }
-
     public void Stop()
     {
         if (!_tcpClient.Connected) return;
@@ -141,7 +136,9 @@ public class Client_
 
     public async Task AskForLoginAsync()
     {
-        throw new NotImplementedException();
+        SendData(SendReplacedObject("username", Username, 1, SendReplacedObject(
+            "password", Password, 1, "Requests\\connect.json"
+        ))!);
     }
 
     private void InitCommands()

@@ -2,6 +2,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Windows.Input;
+using Client.Command;
 using MvvmHelpers;
 using Client.Commands;
 using Path = System.IO.Path;
