@@ -33,6 +33,6 @@ public class CreateAccountCommand : BaseCommand
         _loginWindowViewModel.Client.Password =
             _loginWindowViewModel.SecureStringToString(_loginWindowViewModel.SecurePassword);
 
-        _loginWindowViewModel.Client.CreateAccountAsync();
+        await _loginWindowViewModel.Client.CreateAccountAsync("localhost");
     }
 }

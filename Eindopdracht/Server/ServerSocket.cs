@@ -46,6 +46,9 @@ public class ServerSocket
 
     public void CalculateWinners()
     {
-        
+        foreach (var player in Dealer.PlayingClients)
+        {
+            player.CalculateWin(Dealer.TotalValue);
+        }
     }
 }

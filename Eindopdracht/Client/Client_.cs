@@ -58,7 +58,6 @@ public class Client_
             {
                 await Connect(ip);
                 _log.Information($"Connected to {ip}:{Port}");
-                _stream.BeginRead(_buffer, 0, 1024, OnRead, null);
                 break;
             }
             catch (Exception ex)
@@ -83,6 +82,7 @@ public class Client_
     {
         await _tcpClient.ConnectAsync(ip, Port);
         _stream = _tcpClient.GetStream();
+        _stream.BeginRead(_buffer, 0, 1024, OnRead, null);
     }
 
     private void OnRead(IAsyncResult ar)
@@ -139,11 +139,6 @@ public class Client_
         _tcpClient.Close();
     }
 
-    private void InitCommands()
-    {
-        _commands.Add("client/connected", new ClientConnected());
-    }
-
     public void addViewModel(ObservableObject viewModel)
     {
         ViewModel = viewModel;
@@ -170,11 +165,27 @@ public class Client_
             throw;
         }
     }
+    
+    
+    private void InitCommands()
+    {
+        _commands.Add("client/connected", new ClientConnected());
+        _commands.Add("client/disconnect", new Disconnected());
+        _commands.Add("client/givecard", new GiveCard());
+        _commands.Add("client/clientconnect", new ClientConnect());
+        _commands.Add("client/returnclients", new ReturnClients());
+        _commands.Add("client/giveturn", new GiveTurn());
+        _commands.Add("client/gobust", new GoBust());
+        _commands.Add("client/invalidbet", new InvalidBet());
+        _commands.Add("client/winstatus", new WinStatus());
+        _commands.Add("client/accountcreated", new AccountCreated());
+    }
 
-    public async Task CreateAccountAsync()
+    public async Task CreateAccountAsync(string ip)
     {
         _log.Debug($"CreateAccountCommand(); Username: {Username}; Password {Password}");
-        /*SendData(SendReplacedObject("username", Username, 1, SendReplacedObject(
-            "password", Password, 1, "Requests\\createaccount.json"))!);*/
+        await Connect(ip);
+        SendData(SendReplacedObject("username", Username, 1, SendReplacedObject(
+            "password", Password, 1, "Requests\\createaccount.json"))!);
     }
 }

@@ -1,5 +1,5 @@
 {
-  "id": "winstatus",
+  "id": "client/winstatus",
   "data": {
     "win": 0,
     "balance": 0

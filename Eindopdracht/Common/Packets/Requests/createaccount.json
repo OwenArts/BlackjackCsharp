@@ -1,6 +1,6 @@
 {
-  "id": "client/createAccount",
-  "Data": {
+  "id": "client/createaccount",
+  "data": {
     "username" :"",
     "password" : ""
   }

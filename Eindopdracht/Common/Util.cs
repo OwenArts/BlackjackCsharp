@@ -17,9 +17,23 @@ public static class Util
         return r;
     }
 
+    public static void WriteJson(JObject o, string filename)
+    {
+        var sw = new StreamWriter(PathDir + filename);
+        var stream = new JsonTextWriter(sw);
+        o.WriteTo(stream);
+        stream.Close();
+        sw.Dispose();
+    }
+
     public static JObject GetJson(string filename)
     {
-        return (JObject)JToken.ReadFrom(new JsonTextReader(File.OpenText(PathDir + filename)));
+        var sr = new StreamReader(PathDir + filename);
+        var stream = new JsonTextReader(sr);
+        JObject data = (JObject)JToken.ReadFrom(stream);
+        stream.Close();
+        sr.Dispose();
+        return data;
     }
     
     public static JObject? SendReplacedObject<TR, TO>(string variable, TR replacement, int position, TO targetObject)

@@ -83,6 +83,7 @@ public class ServerClient
     {
         Parent.Clients.Remove(this);
         Parent.Dealer.DisconnectClient(this);
+        IsPlaying = false;
         if (!disconnectSelf) return;
         _stream.Close(1000);
         _tcp.Close();
@@ -91,6 +92,12 @@ public class ServerClient
     public void NotifyTurn()
     {
         SendMessage(GetJson("Response\\giveturn.json"));
+    }
+
+    private void Bust()
+    {
+        Parent.Dealer.GiveTurn();
+        Money -= Bet;
     }
 
     public void GiveCard(Card card)
@@ -114,16 +121,33 @@ public class ServerClient
                 )
             ))!);
         }
+        
+        if (_totalValue > 21)
+        {
+            Bust();
+        }
     }
 
     public void PlaceBet(int bet)
     {
+        if (bet > Money)
+        {
+            SendMessage(GetJson("Response\\invalidbet.json"));
+            return;
+        }
+
         Parent.Dealer.StartTimer();
         Bet = bet;
     }
 
     public void DoubleDown()
     {
+        if (Bet * 2 > Money)
+        {
+            SendMessage(GetJson("Response\\invalidbet.json"));
+            return;
+        }
+
         Bet *= 2;
         GiveCard(Parent.Dealer.Deck.GetRandomCard());
         Parent.Dealer.GiveTurn();
@@ -131,12 +155,15 @@ public class ServerClient
 
     public void Play()
     {
-        int pos = Parent.Clients.Count;
-        if (pos > 4)
+        List<string> activeClients = new();
+        foreach (var client in Parent.Clients.Where(client => client.IsPlaying))
         {
-            
+            client.SendMessage(SendReplacedObject("user", Username, 1, "Response\\clientconnect.json")!);
+            activeClients.Add(client.Username);
         }
-
+        
+        SendMessage(SendReplacedObject("clients", activeClients.ToArray(), 1, "Response\\returnclients.json")!);
+        
         _log.Information("client " + Username + " can play");
         IsPlaying = true;
         SendMessage(SendReplacedObject("status", 0, 1, SendReplacedObject(
@@ -153,6 +180,32 @@ public class ServerClient
         }
     }
 
+    public void CalculateWin(int amountDealer)
+    {
+        int winstatus;
+        if (amountDealer > _totalValue)
+        {
+            Money -= Bet;
+            winstatus = 0;
+        }
+        else if (amountDealer < _totalValue)
+        {
+            Money += Bet;
+            winstatus = 1;
+        }
+        else
+        {
+            winstatus = 2;
+        }
+
+        SendMessage(SendReplacedObject("win", winstatus, 1, SendReplacedObject(
+            "balance", Money, 1, "Response\\winstatus.json"
+        ))!);
+        Bet = 0;
+        _totalValue = 0;
+        _amountOfAces = 0;
+    }
+
     private void InitCommands()
     {
         _commands.Add("server/connect", new ClientConnect());
@@ -161,5 +214,7 @@ public class ServerClient
         _commands.Add("server/calldeck", new CallDeck());
         _commands.Add("server/doubledown", new DoubleDown());
         _commands.Add("server/requestcard", new RequestCard());
+        _commands.Add("server/placebet", new PlacedBet());
+        _commands.Add("clients/createaccount", new CreateAccount());
     }
 }
