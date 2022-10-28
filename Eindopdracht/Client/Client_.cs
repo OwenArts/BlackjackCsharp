@@ -128,14 +128,12 @@ public class Client_
     {
         if (!_tcpClient.Connected) return;
         LoggedIn = false;
-        _log.Critical("Stop()");
         SendData(GetJson("Requests\\disconnect.json"));
     }
 
     public void SelfDestruct()
     {
         _stream.Close(1000);
-        _log.Critical("SelfDestruct()");
         _tcpClient.Close();
     }
 

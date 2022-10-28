@@ -13,6 +13,7 @@ public class QueueViewModel : ObservableObject
     private string _username;
 
     public ICommand JoinGame { get; }
+    public ICommand Stop { get; }
 
     public QueueViewModel(Client_ client, NavigationStore navigationStore)
     {
