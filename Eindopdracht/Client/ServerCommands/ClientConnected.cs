@@ -11,13 +11,17 @@ public class ClientConnected : IServerCommand
         switch (status)
         {
             case 0:
-                MessageBox.Show("login succesful");
+                parent.LoggedIn = true;
+                parent.Queued = false;
                 return;
             case 1:
                 MessageBox.Show("Er is al een account met deze gebruikersnaam ingelogd");
                 break;
             case 2:
                 MessageBox.Show("Er zijn te veel spelers in het spel. U zit nu in de queue");
+                
+                parent.LoggedIn = true;
+                parent.Queued = true;
                 break;
             case 3:
                 MessageBox.Show("Er is geen account gevonden met dit wachtwoord en gebruikersnaam");

@@ -14,9 +14,9 @@ public class ClientViewModel : ObservableObject
     
     // public ObservableCollection<string> _chatMessages;
     
-    private string username;
+    private string _username;
 
-    public ClientViewModel(Client_ client, NavigationStore navStore)
+    public ClientViewModel(Client_ client)
     {
         _client = client;
         _client.ViewModel = this;
@@ -26,11 +26,11 @@ public class ClientViewModel : ObservableObject
     
     public string CurrentUserName
     {
-        get => username;
+        get => _username;
         set
         {
-            username = value;
-            OnPropertyChanged(nameof(CurrentUserName));
+            _username = value;
+            OnPropertyChanged();
         }
     }
 

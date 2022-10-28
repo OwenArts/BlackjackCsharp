@@ -6,6 +6,7 @@ using System.Windows;
 using Client.ServerCommands;
 using Client.ViewModel;
 using Common;
+using MvvmHelpers;
 using Newtonsoft.Json.Linq;
 using static Common.Cryptographer;
 using static Common.Util;
@@ -24,11 +25,12 @@ public class Client_
     private byte[] _totalBuffer = Array.Empty<byte>();
     private readonly byte[] _buffer = new byte[1024];
 
-    public ClientViewModel ViewModel { get; set; }
+    public ObservableObject ViewModel { get; set; }
 
     public string Username { get; set; }
     public string Password { get; set; }
     public bool LoggedIn { get; set; }
+    public bool Queued { get; set; }
 
     public Client_()
     {
@@ -134,6 +136,11 @@ public class Client_
         _tcpClient.Close();
     }
 
+    private void InitCommands()
+    {
+        _commands.Add("client/connected", new ClientConnected());
+    }
+
     public async Task AskForLoginAsync()
     {
         SendData(SendReplacedObject("username", Username, 1, SendReplacedObject(
@@ -141,8 +148,8 @@ public class Client_
         ))!);
     }
 
-    private void InitCommands()
+    public async Task RequestQueueDataAsync()
     {
-        _commands.Add("client/connected", new ClientConnected());
+        // throw new NotImplementedException();
     }
 }

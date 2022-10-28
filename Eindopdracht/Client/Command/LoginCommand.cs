@@ -9,11 +9,11 @@ namespace Client.Command;
 public class LoginCommand : BaseCommand
 {
     private readonly LoginWindowViewModel _loginWindowViewModel;
-    private readonly NavigationService<ClientViewModel> _navigationService;
+    private readonly NavigationService<QueueViewModel> _navigationService;
 
     private readonly Log _log = new(typeof(LoginCommand));
 
-    public LoginCommand(LoginWindowViewModel viewModel, NavigationService<ClientViewModel> navigationService)
+    public LoginCommand(LoginWindowViewModel viewModel, NavigationService<QueueViewModel> navigationService)
     {
         _loginWindowViewModel = viewModel;
         _navigationService = navigationService;
@@ -50,6 +50,16 @@ public class LoginCommand : BaseCommand
             {
                 _log.Error(exception, "Could not start new Thread asking to login");
                 throw;
+            }
+
+            await Task.Delay(500);
+            
+            if (_loginWindowViewModel.Client.LoggedIn)
+            {
+                await _loginWindowViewModel.Client.RequestQueueDataAsync();
+                await Task.Delay(1000);
+
+                _navigationService.Navigate();
             }
         }
     }

@@ -2,9 +2,9 @@ using System.Windows.Controls;
 
 namespace Client.View;
 
-public partial class ClientWindow : UserControl
+public partial class QueueWindow : UserControl
 {
-    public ClientWindow()
+    public QueueWindow()
     {
         InitializeComponent();
     }
