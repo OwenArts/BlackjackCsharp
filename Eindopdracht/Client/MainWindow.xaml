@@ -10,7 +10,7 @@
         Width="800"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        >
+        WindowState="Maximized">
     
     <ContentControl Content="{Binding CurrentViewModel}">
         <ContentControl.Resources>
