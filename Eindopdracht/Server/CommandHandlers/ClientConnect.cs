@@ -27,15 +27,15 @@ public class ClientConnect : ICommandAction
             parent.SelfDestruct(true);
             return;
         }
+        
+        parent.Username = username;
 
         if (parent.Parent.Clients.Count > 4)
         {
             parent.SendMessage(SendReplacedObject("status", 2, 1, "Response\\clientconnected.json")!);
-            parent.SelfDestruct(true);
             return;
         }
 
-        parent.Username = username;
         Log.Send().Information("Login Successful");
         parent.SendMessage(SendReplacedObject("status", 0, 1, "Response\\clientconnected.json")!);
     }

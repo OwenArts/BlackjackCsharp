@@ -103,8 +103,9 @@ public class Client_
 
             _stream.BeginRead(_buffer, 0, 1024, OnRead, null);
         }
-        catch (Exception)
+        catch (Exception e)
         {
+            _log.Error(e, "OnRead() err");
             Stop();
         }
     }
@@ -116,8 +117,9 @@ public class Client_
         {
             _stream.Write(encryptedMessage, 0, encryptedMessage.Length);
         }
-        catch (Exception)
+        catch (Exception e)
         {
+            _log.Error(e, "SendData() err");
             Stop();
         }
     }
@@ -126,12 +128,14 @@ public class Client_
     {
         if (!_tcpClient.Connected) return;
         LoggedIn = false;
-        SendData(GetJson("Client\\Packets\\disconnect.json"));
+        _log.Critical("Stop()");
+        SendData(GetJson("Requests\\disconnect.json"));
     }
 
     public void SelfDestruct()
     {
         _stream.Close(1000);
+        _log.Critical("SelfDestruct()");
         _tcpClient.Close();
     }
 
