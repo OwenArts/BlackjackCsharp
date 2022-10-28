@@ -10,9 +10,9 @@ public class Dealer
     private int _turnsPlayed;
     private readonly ServerSocket _parent;
     public Deck Deck { get; }
-    private int _totalValue;
+    public int TotalValue { get; set; }
     private int _amountOfAces;
-    private readonly List<ServerClient> _playingClients;
+    public List<ServerClient> PlayingClients { get; }
 
     public Dealer(ServerSocket parent)
     {
@@ -21,7 +21,7 @@ public class Dealer
         _parent = parent;
         Deck = new Deck();
         Deck.FillDeck();
-        _playingClients = new List<ServerClient>();
+        PlayingClients = new List<ServerClient>();
     }
 
     public void StartTimer()
@@ -39,6 +39,11 @@ public class Dealer
         }
 
         _timerStarted = false;
+        PlayingClients.Clear();
+        TotalValue = 0;
+        _turnsPlayed = 0;
+        _amountOfAces = 0;
+        Deck.FillDeck();
         StartDealing();
     }
 
@@ -47,12 +52,12 @@ public class Dealer
         foreach (var client in _parent.Clients)
         {
             if(!client.IsPlaying && client.Bet > 0) return;
-            _playingClients.Add(client);
+            PlayingClients.Add(client);
         }
         
         for (var i = 0; i < 2; i++)
         {
-            foreach (var client in _playingClients)
+            foreach (var client in PlayingClients)
             {
                 client.GiveCard(Deck.GetRandomCard());
                 Thread.Sleep(1000);
@@ -66,38 +71,38 @@ public class Dealer
 
     public void GiveTurn()
     {
-        if (_turnsPlayed >= _playingClients.Count)
+        if (_turnsPlayed >= PlayingClients.Count)
         {
             DealerPlay();
             return;
         }
         
-        _playingClients[_turnsPlayed].NotifyTurn();
+        PlayingClients[_turnsPlayed].NotifyTurn();
         _turnsPlayed++;
     }
 
     public void DisconnectClient(ServerClient client)
     {
-        _playingClients.Remove(client);
+        PlayingClients.Remove(client);
     }
 
     private void GiveCardToSelf(Card card)
     {
-        _totalValue += card.Value;
+        TotalValue += card.Value;
         if (card.Piece == 14) _amountOfAces++;
 
-        while (_totalValue > 21 && _amountOfAces > 0)
+        while (TotalValue > 21 && _amountOfAces > 0)
         {
-            _totalValue -= 10;
+            TotalValue -= 10;
             _amountOfAces--;
         }
         
-        _parent.GiveDealerCard(card.Piece, card.Suite, _totalValue);
+        _parent.GiveDealerCard(card.Piece, card.Suite, TotalValue);
     }
 
     private void DealerPlay()
     {
-        while (_totalValue < 17)
+        while (TotalValue < 17)
         {
             GiveCardToSelf(Deck.GetRandomCard());
         }
