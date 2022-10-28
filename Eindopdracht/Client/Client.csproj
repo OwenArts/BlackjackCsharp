@@ -16,4 +16,9 @@
       <PackageReference Include="Refractored.MvvmHelpers" Version="1.6.2" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="Image\Background.png" />
+      <Resource Include="Image\Background.png" />
+    </ItemGroup>
+
 </Project>
