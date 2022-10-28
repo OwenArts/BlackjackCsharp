@@ -215,5 +215,6 @@ public class ServerClient
         _commands.Add("server/doubledown", new DoubleDown());
         _commands.Add("server/requestcard", new RequestCard());
         _commands.Add("server/placebet", new PlacedBet());
+        _commands.Add("clients/createaccount", new CreateAccount());
     }
 }

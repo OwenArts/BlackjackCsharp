@@ -42,7 +42,7 @@ public class LoginCommand : BaseCommand
 
             try
             {
-                await _loginWindowViewModel.Client.CreateAccountAsync();
+                await _loginWindowViewModel.Client.CreateAccountAsync("localhost");
             }
             catch (Exception exception)
             {
