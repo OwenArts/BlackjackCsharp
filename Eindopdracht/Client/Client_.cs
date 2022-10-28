@@ -176,7 +176,7 @@ public class Client_
     {
         _commands.Add("client/connected", new ClientConnected());
         _commands.Add("client/disconnect", new Disconnected());
-        _commands.Add("client/givecard", new GiveCard());
+        _commands.Add("client/givecard", new GiveCard());                       //containt TODO
         _commands.Add("client/clientconnect", new ClientConnect());
         _commands.Add("client/returnclients", new ReturnClients());
         _commands.Add("client/giveturn", new GiveTurn());
