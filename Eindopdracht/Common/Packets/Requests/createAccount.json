@@ -1,0 +1,7 @@
+{
+  "id": "client/createAccount",
+  "Data": {
+    "username" :"",
+    "password" : ""
+  }
+}
