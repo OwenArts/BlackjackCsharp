@@ -20,10 +20,8 @@ public class LoginCommand : BaseCommand
     }
 
     public override async void Execute(object? parameter)
-    {
-        if (_loginWindowViewModel.Username.Length > 0 &&
-            _loginWindowViewModel.SecureStringToString(_loginWindowViewModel.SecurePassword).Length > 0)
-            await ExecuteAsync();
+    { 
+        await ExecuteAsync();
     }
 
     /// <summary>
@@ -42,7 +40,7 @@ public class LoginCommand : BaseCommand
 
             try
             {
-                await _loginWindowViewModel.Client.CreateAccountAsync("localhost");
+                await _loginWindowViewModel.Client.AskForLoginAsync();
             }
             catch (Exception exception)
             {
@@ -51,7 +49,7 @@ public class LoginCommand : BaseCommand
             }
 
             await Task.Delay(500);
-
+            
             if (_loginWindowViewModel.Client.LoggedIn)
             {
                 _navigationService.Navigate();

@@ -10,17 +10,76 @@
             <ImageBrush ImageSource="/Image/Blackjack_texture.png" Stretch="UniformToFill"></ImageBrush>
         </Grid.Background>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition></ColumnDefinition>
-            <ColumnDefinition></ColumnDefinition>
-            <ColumnDefinition></ColumnDefinition>
-            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition></RowDefinition>
-            <RowDefinition></RowDefinition>
-            <RowDefinition></RowDefinition>
-            <RowDefinition></RowDefinition>
-            <RowDefinition></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
+        
+        <UserControl Grid.Column="2" Grid.Row="2" Background="LightGray" >
+            <WrapPanel>
+                <TextBox Name="score" VerticalAlignment="Top" HorizontalAlignment="Center" Text="{Binding Path=Score}"></TextBox>
+            </WrapPanel>
+        </UserControl>
+        
+        
+
+        <!-- Dealer Cards -->
+        <Canvas Grid.Column="2" Grid.Row="0">
+            <Image Source="{Binding DealerCard[0]}" Canvas.Left="430" Canvas.Top="21" Width="115"></Image>
+            <Image Source="{Binding DealerCard[1]}" Canvas.Left="460" Canvas.Top="21" Width="115"></Image>
+            <Image Source="{Binding DealerCard[2]}" Canvas.Left="490" Canvas.Top="21" Width="115"></Image>
+            <Image Source="{Binding DealerCard[3]}" Canvas.Left="520" Canvas.Top="21" Width="115"></Image>
+            <Image Source="{Binding DealerCard[4]}" Canvas.Left="550" Canvas.Top="21" Width="115"></Image>
+            <Image Source="{Binding DealerCard[5]}" Canvas.Left="580" Canvas.Top="21" Width="115"></Image>
+        </Canvas>
+
+        <!-- Player 1 Cards -->
+        <Canvas Grid.Column="0" Grid.Row="1">
+            <Image Source="{Binding Player1Card[0]}" Canvas.Left="430" Canvas.Top="305" Width="115"></Image>
+            <Image Source="{Binding Player1Card[1]}" Canvas.Left="460" Canvas.Top="305" Width="115"></Image>
+            <Image Source="{Binding Player1Card[2]}" Canvas.Left="490" Canvas.Top="305" Width="115"></Image>
+            <Image Source="{Binding Player1Card[3]}" Canvas.Left="520" Canvas.Top="305" Width="115"></Image>
+            <Image Source="{Binding Player1Card[4]}" Canvas.Left="550" Canvas.Top="305" Width="115"></Image>
+            <Image Source="{Binding Player1Card[5]}" Canvas.Left="580" Canvas.Top="305" Width="115"></Image>
+        </Canvas>
+
+        <!-- Player 4 Cards -->
+        <Canvas Grid.Column="4" Grid.Row="1">
+            <Image Source="{Binding Player2Card[0]}" Canvas.Left="430" Canvas.Top="305" Width="115"></Image>
+            <Image Source="{Binding Player2Card[1]}" Canvas.Left="460" Canvas.Top="305" Width="115"></Image>
+            <Image Source="{Binding Player2Card[2]}" Canvas.Left="490" Canvas.Top="305" Width="115"></Image>
+            <Image Source="{Binding Player2Card[3]}" Canvas.Left="520" Canvas.Top="305" Width="115"></Image>
+            <Image Source="{Binding Player2Card[4]}" Canvas.Left="550" Canvas.Top="305" Width="115"></Image>
+            <Image Source="{Binding Player2Card[5]}" Canvas.Left="580" Canvas.Top="305" Width="115"></Image>
+        </Canvas>
+
+        <!-- Player 2 Cards -->
+        <Canvas Grid.Column="1" Grid.Row="4">
+            <Image Source="{Binding Player3Card[0]}" Canvas.Left="430" Canvas.Top="305" Width="115"></Image>
+            <Image Source="{Binding Player3Card[1]}" Canvas.Left="460" Canvas.Top="305" Width="115"></Image>
+            <Image Source="{Binding Player3Card[2]}" Canvas.Left="490" Canvas.Top="305" Width="115"></Image>
+            <Image Source="{Binding Player3Card[3]}" Canvas.Left="520" Canvas.Top="305" Width="115"></Image>
+            <Image Source="{Binding Player3Card[4]}" Canvas.Left="550" Canvas.Top="305" Width="115"></Image>
+            <Image Source="{Binding Player3Card[5]}" Canvas.Left="580" Canvas.Top="305" Width="115"></Image>
+        </Canvas>
+
+        <!-- Player 4 Cards -->
+        <Canvas Grid.Column="3" Grid.Row="4">
+            <Image Source="{Binding Player4Card[0]}" Canvas.Left="430" Canvas.Top="305" Width="115"></Image>
+            <Image Source="{Binding Player4Card[1]}" Canvas.Left="460" Canvas.Top="305" Width="115"></Image>
+            <Image Source="{Binding Player4Card[2]}" Canvas.Left="490" Canvas.Top="305" Width="115"></Image>
+            <Image Source="{Binding Player4Card[3]}" Canvas.Left="520" Canvas.Top="305" Width="115"></Image>
+            <Image Source="{Binding Player4Card[4]}" Canvas.Left="550" Canvas.Top="305" Width="115"></Image>
+            <Image Source="{Binding Player4Card[5]}" Canvas.Left="580" Canvas.Top="305" Width="115"></Image>
+        </Canvas>
     </Grid>
 </UserControl>
