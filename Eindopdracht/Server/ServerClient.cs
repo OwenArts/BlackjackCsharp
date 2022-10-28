@@ -72,8 +72,9 @@ public class ServerClient
 
             _stream.BeginRead(_buffer, 0, 1024, OnRead, null);
         }
-        catch (Exception)
+        catch (Exception e)
         {
+            _log.Error(e, "OnRead() err");
             SelfDestruct(false);    
         }
     }

@@ -13,17 +13,21 @@ public class ClientConnected : IServerCommand
         {
             case 0:
                 parent.LoggedIn = true;
+                parent.Balance = packet["data"]!["money"]!.ToObject<int>();
                 await Task.Delay(1000);
                 parent.ExitQueue();
                 return;
             case 1:
-                MessageBox.Show("Er is al een account met deze gebruikersnaam ingelogd");
+                MessageBox.Show("Er is al een apparaat met dit account ingelogd.");
                 break;
             case 2:
                 parent.LoggedIn = true;
                 return;
             case 3:
-                MessageBox.Show("Er is geen account gevonden met dit wachtwoord en gebruikersnaam");
+                MessageBox.Show("Er is geen account gevonden met dit wachtwoord en gebruikersnaam.");
+                break;
+            case 4:
+                MessageBox.Show("De ingevoerde gebruikersnaam is al in bezit genomen.");
                 break;
         }
         parent.SelfDestruct();
