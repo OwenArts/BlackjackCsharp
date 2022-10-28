@@ -14,13 +14,29 @@ public class CreateAccount : ICommandAction
         var oAccounts = GetJson("Storage\\accounts.json");
         var accounts = oAccounts["accounts"]!.ToObject<string[][]>()!.ToList();
 
-        if (accounts.Any(account => account[0] == username))
+        Log.Send().Critical($"{accounts.Count}");
+
+        foreach (var acc in accounts)
         {
-            parent.SendMessage(SendReplacedObject("status", 0, 1, "Response\\accountcreated.json")!);
-            return;
+            Log.Send().Error($"Username, {username} : found: {acc[0]}");
+            if (acc[0] == username)
+            {
+                try
+                {
+                    parent.SendMessage(SendReplacedObject("status", 1, 1, "Response\\accountcreated.json")!);
+                    parent.SelfDestruct(true);
+                }
+                catch (Exception e)
+                {
+                    Log.Send().Error(e, "Could not send message");
+                    throw;
+                }
+                return;
+            }
         }
 
-        accounts.Add(new[]{username,password});
+
+        accounts.Add(new[] { username, password });
         var jArray = new JArray();
         foreach (var account in accounts)
         {
@@ -29,12 +45,36 @@ public class CreateAccount : ICommandAction
         }
 
         oAccounts["accounts"] = jArray;
-        
+
         Log.Send().Debug($"Writing to Acounts.json: {oAccounts}");
 
         WriteJson(oAccounts, "Storage\\accounts.json");
-        parent.SendMessage(SendReplacedObject("status", 1, 1, "Response\\accountcreated.json")!);
-        
-        // parent.SelfDestruct(true);
+        parent.SendMessage(SendReplacedObject("status", 0, 1, "Response\\accountcreated.json")!);
+
+        /*
+        if (accounts.Any(account => account[0] != username))
+        {
+            accounts.Add(new[] { username, password });
+            var jArray = new JArray();
+            foreach (var account in accounts)
+            {
+                var array = new JArray(account.ToList());
+                jArray.Add(array);
+            }
+
+            oAccounts["accounts"] = jArray;
+
+            Log.Send().Debug($"Writing to Acounts.json: {oAccounts}");
+
+            WriteJson(oAccounts, "Storage\\accounts.json");
+            parent.SendMessage(SendReplacedObject("status", 0, 1, "Response\\accountcreated.json")!);
+
+            return;
+        }
+        */
+
+        /*parent.SendMessage(SendReplacedObject("status", 1, 1, "Response\\accountcreated.json")!);
+
+        parent.SelfDestruct(true);*/
     }
 }
