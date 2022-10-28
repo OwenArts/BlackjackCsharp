@@ -4,13 +4,14 @@ using System.Security;
 using System.Windows.Input;
 using MvvmHelpers;
 using Client.Commands;
+using Path = System.IO.Path;
 
 namespace Client.ViewModel;
 
 public class LoginWindowViewModel : ObservableObject
 {
     public Client_ Client;
-    public ICommand LogIn { get; }
+    public ICommand LogInButton { get; }
 
     private string _username;
     private SecureString _password;
@@ -19,9 +20,9 @@ public class LoginWindowViewModel : ObservableObject
     public LoginWindowViewModel(NavigationStore navigationStore)
     {
         Client = new();
-        LogIn = new LoginCommand(this, 
+        LogInButton = new LoginCommand(this, 
             new NavigationService<ClientViewModel>(navigationStore, 
-            () => new ClientViewModel(Client)));
+            () => new ClientViewModel(Client, navigationStore)));
     }
 
     public string Username

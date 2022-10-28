@@ -13,8 +13,10 @@ public class ClientViewModel : ObservableObject
     // public ICommand EmergencyStop { get; }
     
     // public ObservableCollection<string> _chatMessages;
+    
+    private string username;
 
-    public ClientViewModel(Client_ client)
+    public ClientViewModel(Client_ client, NavigationStore navStore)
     {
         _client = client;
         _client.ViewModel = this;
@@ -32,7 +34,6 @@ public class ClientViewModel : ObservableObject
         }
     }
 
-    private string username;
     
 
     // public Patient CurrentUser
