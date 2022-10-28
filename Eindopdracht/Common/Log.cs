@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace RemoteHealthcare.Common.Logger;
+namespace Common;
 
 public class Log
 {
