@@ -8,9 +8,7 @@ public static class Util
     private static readonly string PathDir =
         Path.Combine(Environment.CurrentDirectory.Substring(0, Environment.CurrentDirectory.LastIndexOf("Eindopdracht", StringComparison.Ordinal)),
             "Eindopdracht\\Common\\Packets\\");
-        // Environment.CurrentDirectory.Substring(0,
-        //     Environment.CurrentDirectory.LastIndexOf("Common", StringComparison.Ordinal)) + "\\Packets\\";
-    
+
     public static byte[] Concat(byte[] b1, byte[] b2, int count)
     {
         var r = new byte[b1.Length + count];

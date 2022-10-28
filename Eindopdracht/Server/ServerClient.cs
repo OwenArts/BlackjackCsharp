@@ -15,20 +15,30 @@ public class ServerClient
     private readonly NetworkStream _stream;
     private readonly Dictionary<string, ICommandAction> _commands;
 
+    private int _totalValue;
+    private int _amountOfAces;
     private byte[] _totalBuffer = Array.Empty<byte>();
     private readonly byte[] _buffer = new byte[1024];
 
-    public Log _log = new Log(typeof(ServerClient));
+    private readonly Log _log = new Log(typeof(ServerClient));
     public string Username { get; set; }
+    public bool IsPlaying { get; set; }
+    public int Bet { get; set; }
+    public int Money { get; set; }
 
     public ServerClient(TcpClient tcp, ServerSocket parent)
     {
+        _totalValue = 0;
+        _amountOfAces = 0;
+        IsPlaying = false;
         Parent = parent;
         _tcp = tcp;
         _stream = _tcp.GetStream();
         _commands = new Dictionary<string, ICommandAction>();
         InitCommands();
         Username = "";
+        Bet = 0;
+        Money = 1000;
     }
 
     public void Start()
@@ -69,16 +79,87 @@ public class ServerClient
         }
     }
 
-    public async void SelfDestruct(bool disconnectSelf)
+    public void SelfDestruct(bool disconnectSelf)
     {
         Parent.Clients.Remove(this);
+        Parent.Dealer.DisconnectClient(this);
         if (!disconnectSelf) return;
         _stream.Close(1000);
         _tcp.Close();
     }
 
+    public void NotifyTurn()
+    {
+        SendMessage(GetJson("Response\\giveturn.json"));
+    }
+
+    public void GiveCard(Card card)
+    {
+        _totalValue += card.Value;
+        if (card.Piece == 14) _amountOfAces++;
+
+        while (_totalValue > 21 && _amountOfAces > 0)
+        {
+            _totalValue -= 10;
+            _amountOfAces--;
+        }
+
+        foreach (var client in Parent.Clients)
+        {
+            client.SendMessage(SendReplacedObject("user", Username, 1, SendReplacedObject(
+                "piece", card.Piece, 1, SendReplacedObject(
+                    "suite", card.Suite, 1, SendReplacedObject(
+                        "value", _totalValue, 1, "Response\\givecard.json"
+                    )
+                )
+            ))!);
+        }
+    }
+
+    public void PlaceBet(int bet)
+    {
+        Parent.Dealer.StartTimer();
+        Bet = bet;
+    }
+
+    public void DoubleDown()
+    {
+        Bet *= 2;
+        GiveCard(Parent.Dealer.Deck.GetRandomCard());
+        Parent.Dealer.GiveTurn();
+    }
+
+    public void Play()
+    {
+        int pos = Parent.Clients.Count;
+        if (pos > 4)
+        {
+            
+        }
+
+        _log.Information("client " + Username + " can play");
+        IsPlaying = true;
+        SendMessage(SendReplacedObject("status", 0, 1, SendReplacedObject(
+            "money", Money, 1, "Response\\clientconnected.json"
+        ))!);
+    }
+
+    public void NotifyNextClient()
+    {
+        foreach (var client in Parent.Clients.Where(client => !client.IsPlaying))
+        {
+            client.Play();
+            break;
+        }
+    }
+
     private void InitCommands()
     {
         _commands.Add("server/connect", new ClientConnect());
+        _commands.Add("server/disconnect", new Disconnect());
+        _commands.Add("server/getclients", new Disconnect());
+        _commands.Add("server/calldeck", new CallDeck());
+        _commands.Add("server/doubledown", new DoubleDown());
+        _commands.Add("server/requestcard", new RequestCard());
     }
 }

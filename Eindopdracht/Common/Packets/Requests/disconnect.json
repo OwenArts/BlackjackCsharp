@@ -1,3 +1,6 @@
 {
-  "id": "server/disconnect"
+  "id": "server/disconnect",
+  "data":{
+    "destruct": false
+  }
 }
