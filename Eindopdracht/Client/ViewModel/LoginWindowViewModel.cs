@@ -12,7 +12,8 @@ namespace Client.ViewModel;
 public class LoginWindowViewModel : ObservableObject
 {
     public Client_ Client;
-    public ICommand LogInButton { get; }
+    public ICommand LogIn { get; }
+    public ICommand CreateAccount { get; }
 
     private string _username;
     private SecureString _password;
@@ -20,14 +21,23 @@ public class LoginWindowViewModel : ObservableObject
     public LoginWindowViewModel(NavigationStore navigationStore)
     {
         Client = navigationStore.Client;
-        LogInButton = new LoginCommand(this, 
+        LogIn = new LoginCommand(this, 
             new NavigationService<QueueViewModel>(navigationStore, 
             () => new QueueViewModel(Client, navigationStore)));
+        CreateAccount = new CreateAccountCommand(this, 
+            new NavigationService<QueueViewModel>(navigationStore, 
+                () => new QueueViewModel(Client, navigationStore)));
     }
 
     public string Username
     {
-        get => _username;
+        get
+        {
+            if (_username != null && _username.Length > 0)
+                return _username;
+            else 
+                return "";
+        }
         set => _username = value;
     }
 
@@ -36,7 +46,7 @@ public class LoginWindowViewModel : ObservableObject
         get => _password;
         set => _password = value;
     }
-    
+
     /// <summary>
     /// "Convert a SecureString to a string by copying the SecureString to unmanaged memory, then copying the unmanaged
     /// memory to a managed string, then zeroing out the unmanaged memory."

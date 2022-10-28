@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using System.Windows;
+using Client.Command;
 using Client.ServerCommands;
 using Client.ViewModel;
 using Common;
@@ -29,6 +30,7 @@ public class Client_
 
     public string Username { get; set; }
     public string Password { get; set; }
+    public int Balance { get; set; }
     public bool LoggedIn { get; set; }
 
     public Client_()
@@ -167,5 +169,12 @@ public class Client_
             _log.Error(e, "Unable to exit queue");
             throw;
         }
+    }
+
+    public async Task CreateAccountAsync()
+    {
+        _log.Debug($"CreateAccountCommand(); Username: {Username}; Password {Password}");
+        /*SendData(SendReplacedObject("username", Username, 1, SendReplacedObject(
+            "password", Password, 1, "Requests\\createaccount.json"))!);*/
     }
 }
