@@ -23,7 +23,8 @@ public class ServerClient
     private readonly Log _log = new Log(typeof(ServerClient));
     public string Username { get; set; }
     public bool IsPlaying { get; set; }
-    public int _bet;
+    public int Bet { get; set; }
+    public int Money { get; set; }
 
     public ServerClient(TcpClient tcp, ServerSocket parent)
     {
@@ -36,7 +37,8 @@ public class ServerClient
         _commands = new Dictionary<string, ICommandAction>();
         InitCommands();
         Username = "";
-        _bet = 0;
+        Bet = 0;
+        Money = 1000;
     }
 
     public void Start()
@@ -116,20 +118,28 @@ public class ServerClient
     public void PlaceBet(int bet)
     {
         Parent.Dealer.StartTimer();
-        _bet = bet;
+        Bet = bet;
     }
 
     public void DoubleDown()
     {
-        _bet *= 2;
+        Bet *= 2;
+        GiveCard(Parent.Dealer.Deck.GetRandomCard());
+        Parent.Dealer.GiveTurn();
     }
 
     public void Play()
     {
+        int pos = Parent.Clients.Count;
+        if (pos > 4)
+        {
+            
+        }
+
         _log.Information("client " + Username + " can play");
         IsPlaying = true;
         SendMessage(SendReplacedObject("status", 0, 1, SendReplacedObject(
-            "pos", Parent.Clients.Count, 1, "Response\\clientconnected.json"
+            "money", Money, 1, "Response\\clientconnected.json"
         ))!);
     }
 
@@ -147,5 +157,8 @@ public class ServerClient
         _commands.Add("server/connect", new ClientConnect());
         _commands.Add("server/disconnect", new Disconnect());
         _commands.Add("server/getclients", new Disconnect());
+        _commands.Add("server/calldeck", new CallDeck());
+        _commands.Add("server/doubledown", new DoubleDown());
+        _commands.Add("server/requestcard", new RequestCard());
     }
 }

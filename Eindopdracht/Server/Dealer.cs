@@ -9,7 +9,7 @@ public class Dealer
     private bool _timerStarted;
     private int _turnsPlayed;
     private readonly ServerSocket _parent;
-    private Deck _deck;
+    public Deck Deck { get; }
     private int _totalValue;
     private int _amountOfAces;
     private readonly List<ServerClient> _playingClients;
@@ -19,8 +19,8 @@ public class Dealer
         _turnsPlayed = 0;
         _timerStarted = false;
         _parent = parent;
-        _deck = new Deck();
-        _deck.FillDeck();
+        Deck = new Deck();
+        Deck.FillDeck();
         _playingClients = new List<ServerClient>();
     }
 
@@ -46,7 +46,7 @@ public class Dealer
     {
         foreach (var client in _parent.Clients)
         {
-            if(!client.IsPlaying && client._bet > 0) return;
+            if(!client.IsPlaying && client.Bet > 0) return;
             _playingClients.Add(client);
         }
         
@@ -54,24 +54,26 @@ public class Dealer
         {
             foreach (var client in _playingClients)
             {
-                client.GiveCard(_deck.GetRandomCard());
+                client.GiveCard(Deck.GetRandomCard());
                 Thread.Sleep(1000);
             }
             
-            GiveCardToSelf(_deck.GetRandomCard());
+            GiveCardToSelf(Deck.GetRandomCard());
             Thread.Sleep(1000);
         }
+        GiveTurn();
     }
 
     public void GiveTurn()
     {
-        _turnsPlayed++;
-
         if (_turnsPlayed >= _playingClients.Count)
         {
-            
+            DealerPlay();
+            return;
         }
-        _playingClients[_turnsPlayed]
+        
+        _playingClients[_turnsPlayed].NotifyTurn();
+        _turnsPlayed++;
     }
 
     public void DisconnectClient(ServerClient client)
@@ -92,11 +94,13 @@ public class Dealer
         
         _parent.GiveDealerCard(card.Piece, card.Suite, _totalValue);
     }
-    
-    
-    
-    public void GiveCardToClient(ServerClient client)
+
+    private void DealerPlay()
     {
-        client.
+        while (_totalValue < 17)
+        {
+            GiveCardToSelf(Deck.GetRandomCard());
+        }
+        _parent.CalculateWinners();
     }
 }

@@ -2,6 +2,6 @@
   "id": "client/connected",
   "data": {
     "status": 1,
-    "pos": -1
+    "money": -1
   }
 }

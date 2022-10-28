@@ -43,4 +43,9 @@ public class ServerSocket
             ))!);
         }
     }
+
+    public void CalculateWinners()
+    {
+        
+    }
 }
