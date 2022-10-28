@@ -20,4 +20,5 @@ public abstract class BaseCommand : IAsyncCommand
     }
 
     public abstract Task ExecuteAsync();
+    
 }
