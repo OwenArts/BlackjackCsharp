@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Windows.Input;
 using System.Windows.Media;
+using Client.Command;
 using Common;
 using MvvmHelpers;
 
@@ -82,6 +85,11 @@ public class ClientViewModel : ObservableObject
         }
     }
 
+    public ICommand Hit { get; }
+    public ICommand Stand { get; }
+    public ICommand DoubleDown { get; }
+    public ICommand BetC { get; }
+
     public ClientViewModel(Client_ client)
     {
         var player1 = "";
@@ -110,18 +118,30 @@ public class ClientViewModel : ObservableObject
         _gameStarted = false;
         _hasTurn = false;
         Money = Client.Balance;
+
+        Hit = new HitCommand(this);
+        Stand = new StandCommand(this);
+        DoubleDown = new DoubleDownCommand(this);
+        BetC = new BetCommand(this);
     }
 
     public void UpdateCards(string name, string card, int value)
     {
-        foreach (var player in _players)
+        foreach (var player in _players.Where(player => player.Name == name))
         {
-            if(player.Name != name) continue;
             player.AddCard(card);
             player.Score = value;
         }
     }
-    
+
+    public void Reset()
+    {
+        foreach (var player in _players)
+        {
+            player.Cards.Clear();
+            player.Score = 0;
+        }
+    }
 
 
     // public Patient CurrentUser
