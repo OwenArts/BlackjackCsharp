@@ -21,7 +21,6 @@ public class WinStatus : IServerCommand
             _ => viewModel.MiddleMessage
         };
         Thread.Sleep(4000);
-        viewModel.GameStarted = false;
         viewModel.Reset();
     }
 }

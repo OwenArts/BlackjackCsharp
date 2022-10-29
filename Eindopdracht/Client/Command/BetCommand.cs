@@ -30,6 +30,8 @@ public class BetCommand : BaseCommand
             return;
         }
         _viewModel.Client.Bet(betInt);
+        if(_viewModel.Money >= betInt)
+            _viewModel.Money -= betInt;
     }
 
     public override Task ExecuteAsync()

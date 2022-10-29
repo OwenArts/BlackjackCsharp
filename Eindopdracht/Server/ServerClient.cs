@@ -13,7 +13,6 @@ public class ServerClient
     private readonly TcpClient _tcp;
     private readonly NetworkStream _stream;
     private readonly Dictionary<string, ICommandAction> _commands;
-    private bool _bust;
 
     private int _totalValue;
     private int _amountOfAces;
@@ -39,7 +38,6 @@ public class ServerClient
         Username = "";
         Bet = 0;
         Money = 1000;
-        _bust = false;
     }
 
     public void Start()
@@ -96,12 +94,6 @@ public class ServerClient
         SendMessage(GetJson("Response\\giveturn.json"));
     }
 
-    private void Bust()
-    {
-        Parent.Dealer.GiveTurn();
-        _bust = true;
-    }
-
     public void GiveCard(Card card)
     {
         _totalValue += card.Value;
@@ -123,11 +115,9 @@ public class ServerClient
                 )
             ))!);
         }
-        
-        if (_totalValue > 21)
-        {
-            Bust();
-        }
+
+        if (_totalValue <= 21) return;
+        Parent.Dealer.GiveTurn();
     }
 
     public void PlaceBet(int bet)
@@ -185,7 +175,7 @@ public class ServerClient
     public void CalculateWin(int amountDealer)
     {
         int winstatus;
-        if ((amountDealer > _totalValue && amountDealer <= 21) || _bust )
+        if ((amountDealer > _totalValue && amountDealer <= 21) || _totalValue > 21 )
         {
             Money -= Bet;
             winstatus = 0;
@@ -206,7 +196,6 @@ public class ServerClient
         Bet = 0;
         _totalValue = 0;
         _amountOfAces = 0;
-        _bust = false;
     }
 
     private void InitCommands()
