@@ -64,8 +64,8 @@ public class ServerClient
                 JObject data = GetDecryptedMessage(_totalBuffer);
                 _log.Debug($"OnRead: {data}");
                 _totalBuffer = Array.Empty<byte>();
-                
-                if(_commands.ContainsKey(data["id"]!.ToObject<string>()!))
+
+                if (_commands.ContainsKey(data["id"]!.ToObject<string>()!))
                     _commands[data["id"]!.ToObject<string>()!].OnCommandReceived(data, this);
                 break;
             }
@@ -75,7 +75,7 @@ public class ServerClient
         catch (Exception e)
         {
             _log.Error(e, "OnRead() err");
-            SelfDestruct(false);    
+            SelfDestruct(false);
         }
     }
 
@@ -120,29 +120,34 @@ public class ServerClient
         Parent.Dealer.GiveTurn();
     }
 
-    public void PlaceBet(int bet)
+    public int PlaceBet(int bet)
     {
         if (bet > Money)
         {
             SendMessage(GetJson("Response\\invalidbet.json"));
-            return;
+            return -1;
         }
 
         Parent.Dealer.StartTimer();
         Bet = bet;
+        return Bet;
     }
 
-    public void DoubleDown()
+    public int DoubleDown(int? testBet = null)
     {
+        if (testBet != null)
+            Bet = testBet.Value;
+        
         if (Bet * 2 > Money)
         {
             SendMessage(GetJson("Response\\invalidbet.json"));
-            return;
+            return Bet;
         }
 
         Bet *= 2;
         GiveCard(Parent.Dealer.Deck.GetRandomCard());
         Parent.Dealer.GiveTurn();
+        return Bet;
     }
 
     public void Play()
@@ -153,9 +158,9 @@ public class ServerClient
             activeClients.Add(client.Username);
             client.SendMessage(SendReplacedObject("user", Username, 1, "Response\\clientconnect.json")!);
         }
-        
+
         SendMessage(SendReplacedObject("clients", activeClients.ToArray(), 1, "Response\\returnclients.json")!);
-        
+
         _log.Information("client " + Username + " can play");
         IsPlaying = true;
         SendMessage(SendReplacedObject("status", 0, 1, SendReplacedObject(
@@ -176,9 +181,9 @@ public class ServerClient
     {
         if (testTotal != null)
             _totalValue = testTotal.Value;
-            
+
         int winstatus;
-        if ((amountDealer > _totalValue && amountDealer <= 21) || _totalValue > 21 )
+        if ((amountDealer > _totalValue && amountDealer <= 21) || _totalValue > 21)
         {
             Money -= Bet;
             winstatus = 0;

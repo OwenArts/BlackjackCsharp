@@ -22,6 +22,5 @@ public class HitCommand : BaseCommand
 
     public override Task ExecuteAsync()
     {
-        throw new System.NotImplementedException();
     }
 }

@@ -15,6 +15,6 @@ public class ServerTest
 
         client.Connect("localhost", 7492);
 
-        Assert.AreEqual(true, client.Connected, "Failed to connect to server");
+        Assert.AreEqual(true, client.Connected, "Failed to connect to server.");
     }
 }

@@ -23,6 +23,5 @@ public class StandCommand : BaseCommand
 
     public override Task ExecuteAsync()
     {
-        throw new System.NotImplementedException();
     }
 }

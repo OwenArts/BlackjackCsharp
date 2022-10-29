@@ -22,6 +22,5 @@ public class DoubleDownCommand : BaseCommand
 
     public override Task ExecuteAsync()
     {
-        throw new System.NotImplementedException();
     }
 }
