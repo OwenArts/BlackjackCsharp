@@ -146,7 +146,7 @@ public class Client_
         _tcpClient.Close();
     }
 
-    public void addViewModel(ObservableObject viewModel)
+    public void AddViewModel(ObservableObject viewModel)
     {
         ViewModel = viewModel;
     }
@@ -177,8 +177,8 @@ public class Client_
     private void InitCommands()
     {
         _commands.Add("client/connected", new ClientConnected());
-        _commands.Add("client/disconnect", new Disconnected());
-        _commands.Add("client/givecard", new GiveCard());                       //containt TODO
+        _commands.Add("client/disconnected", new Disconnected());
+        _commands.Add("client/givecard", new GiveCard());                      
         _commands.Add("client/clientconnect", new ClientConnect());
         _commands.Add("client/returnclients", new ReturnClients());
         _commands.Add("client/giveturn", new GiveTurn());
@@ -186,6 +186,7 @@ public class Client_
         _commands.Add("client/invalidbet", new InvalidBet());
         _commands.Add("client/winstatus", new WinStatus());
         _commands.Add("client/accountcreated", new AccountCreated());
+        _commands.Add("client/timerupdate", new TimerUpdate());
     }
 
     public async Task CreateAccountAsync(string ip)
@@ -194,5 +195,25 @@ public class Client_
         await MakeConnectionAsync(ip);
         SendData(SendReplacedObject("username", Username, 1, SendReplacedObject(
             "password", Password, 1, "Requests\\createaccount.json"))!);
+    }
+
+    public void Bet(int amount)
+    {
+        SendData(SendReplacedObject("bet", amount, 1, "Requests\\createbet.json")!);
+    }
+
+    public void Stand()
+    {
+        SendData(GetJson("Requests\\calldeck.json"));
+    }
+
+    public void RequestCard()
+    {
+        SendData(GetJson("Requests\\requestcard.json"));
+    }
+
+    public void DoubleDown()
+    {
+        SendData(GetJson("Requests\\doubledown.json"));
     }
 }

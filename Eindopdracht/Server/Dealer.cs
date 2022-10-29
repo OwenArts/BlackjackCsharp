@@ -33,8 +33,9 @@ public class Dealer
 
     private void TimeCounter()
     {
-        for (int i = 10; i >= 0; i--)
+        for (int i = 15; i >= 0; i--)
         {
+            _parent.SendCounterUpdate(i);
             Thread.Sleep(1000);
         }
 
@@ -44,17 +45,16 @@ public class Dealer
         _turnsPlayed = 0;
         _amountOfAces = 0;
         Deck.FillDeck();
+        foreach (var client in _parent.Clients.Where(client => client.IsPlaying && client.Bet > 0))
+        {
+            PlayingClients.Add(client);
+        }
+        _parent.SendStartedUpdate();
         StartDealing();
     }
 
     private void StartDealing()
     {
-        foreach (var client in _parent.Clients)
-        {
-            if(!client.IsPlaying && client.Bet > 0) return;
-            PlayingClients.Add(client);
-        }
-        
         for (var i = 0; i < 2; i++)
         {
             foreach (var client in PlayingClients)
@@ -105,6 +105,7 @@ public class Dealer
         while (TotalValue < 17)
         {
             GiveCardToSelf(Deck.GetRandomCard());
+            Thread.Sleep(1000);
         }
         _parent.CalculateWinners();
     }

@@ -13,6 +13,7 @@ public class ServerClient
     private readonly TcpClient _tcp;
     private readonly NetworkStream _stream;
     private readonly Dictionary<string, ICommandAction> _commands;
+    private bool _bust;
 
     private int _totalValue;
     private int _amountOfAces;
@@ -38,6 +39,7 @@ public class ServerClient
         Username = "";
         Bet = 0;
         Money = 1000;
+        _bust = false;
     }
 
     public void Start()
@@ -97,7 +99,7 @@ public class ServerClient
     private void Bust()
     {
         Parent.Dealer.GiveTurn();
-        Money -= Bet;
+        _bust = true;
     }
 
     public void GiveCard(Card card)
@@ -155,14 +157,11 @@ public class ServerClient
 
     public void Play()
     {
-        Dictionary<string, int> activeClients = new();
-        int count = 0;
+        List<string> activeClients = new();
         foreach (var client in Parent.Clients.Where(client => client.IsPlaying))
         {
-            if (count < 4) count++;
-            
+            activeClients.Add(client.Username);
             client.SendMessage(SendReplacedObject("user", Username, 1, "Response\\clientconnect.json")!);
-            activeClients.Add(client.Username, count);
         }
         
         SendMessage(SendReplacedObject("clients", activeClients.ToArray(), 1, "Response\\returnclients.json")!);
@@ -186,12 +185,12 @@ public class ServerClient
     public void CalculateWin(int amountDealer)
     {
         int winstatus;
-        if (amountDealer > _totalValue)
+        if ((amountDealer > _totalValue && amountDealer <= 21) || _bust )
         {
             Money -= Bet;
             winstatus = 0;
         }
-        else if (amountDealer < _totalValue)
+        else if (amountDealer < _totalValue || amountDealer > 21)
         {
             Money += Bet;
             winstatus = 1;
@@ -207,6 +206,7 @@ public class ServerClient
         Bet = 0;
         _totalValue = 0;
         _amountOfAces = 0;
+        _bust = false;
     }
 
     private void InitCommands()
