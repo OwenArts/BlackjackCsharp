@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Media;
 using Common;
@@ -8,33 +9,60 @@ namespace Client.ViewModel;
 
 public class ClientViewModel : ObservableObject
 {
-    private Client_ _client;
-    private Log _log = new Log(typeof(ClientViewModel));
-    // public ICommand EmergencyStop { get; }
-    
-    // public ObservableCollection<string> _chatMessages;
-    
-    private string username;
+    private readonly Client_ _client;
+    private readonly Log _log = new Log(typeof(ClientViewModel));
 
-    public ClientViewModel(Client_ client, NavigationStore navStore)
+    private readonly Player _self;
+    private readonly Player _player1;
+    private readonly Player _player2;
+    private readonly Player _player3;
+    private readonly Player _dealer;
+
+    public Player Self => _self;
+    public Player Player1 => _player1;
+    public Player Player2 => _player2;
+    public Player Player3 => _player3;
+    public Player Dealer => _dealer;
+    private List<Player> _players;
+
+    public ClientViewModel(Client_ client)
     {
+        var player1 = "";
+        var player2 = "";
+        var player3 = "";
+        var otherPlayers = client.OtherPlayers;
+        _log.Information("Client got to here");
+        if (otherPlayers.Length > 0)
+            player1 = otherPlayers[0];
+        if (otherPlayers.Length > 1)
+            player2 = otherPlayers[1];
+        if (otherPlayers.Length > 2)
+            player3 = otherPlayers[2];
+        
+        _log.Information("Client finished defining players");
+
+
         _client = client;
-        _client.ViewModel = this;
-        // _chatMessages = new ObservableCollection<string>();
-        // EmergencyStop = new EmergencyStopCommand(_client, this);
+        _client.addViewModel(this);
+        _self = new Player(_client.Username);
+        _player1 = new Player(player1);
+        _player2 = new Player(player2);
+        _player3 = new Player(player3);
+        _dealer = new Player("Dealer");
+        _players = new List<Player>{ _self, _player1, _player2, _player3, _dealer };
     }
-    
-    public string CurrentUserName
+
+    public void UpdateCards(string name, string card, int value)
     {
-        get => username;
-        set
+        foreach (var player in _players)
         {
-            username = value;
-            OnPropertyChanged(nameof(CurrentUserName));
+            if(player.Name != name) continue;
+            player.AddCard(card);
+            player.Score = value;
         }
     }
-
     
+
 
     // public Patient CurrentUser
     // {
