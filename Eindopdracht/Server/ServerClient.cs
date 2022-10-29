@@ -160,9 +160,17 @@ public class ServerClient
         
         _log.Information("client " + Username + " can play");
         IsPlaying = true;
+
+        int status;
+        if (Parent.GameActive)
+            status = 1;
+        else 
+            status = 0;
+        
+
         SendMessage(SendReplacedObject("status", 0, 1, SendReplacedObject(
             "money", Money, 1, SendReplacedObject(
-                "active", Parent.GameActive, 1, "Response\\clientconnected.json"
+                "active", status, 1, "Response\\clientconnected.json"
             )
         ))!);
     }
@@ -171,8 +179,15 @@ public class ServerClient
     {
         foreach (var client in Parent.Clients.Where(client => !client.IsPlaying))
         {
-            client.Play();
-            break;
+            try
+            {
+                client.Play();
+                break;
+            }
+            catch (Exception)
+            {
+                _log.Error("could not write to this client");
+            }
         }
     }
 

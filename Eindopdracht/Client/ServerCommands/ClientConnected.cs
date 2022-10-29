@@ -9,14 +9,17 @@ public class ClientConnected : IServerCommand
     public async void OnCommandReceivedAsync(JObject packet, Client_ parent)
     {
         var status = packet["data"]!["status"]!.ToObject<int>();
-        var gameActive = packet["data"]!["active"]!.ToObject<bool>();
+        var gameActive = packet["data"]!["active"]!.ToObject<int>();
         switch (status)
         {
             case 0:
                 parent.LoggedIn = true;
                 parent.IsPlaying = true;
                 parent.Balance = packet["data"]!["money"]!.ToObject<int>();
-                parent.GameActive = gameActive;
+                if(gameActive == 0)
+                    parent.GameActive = false;
+                else if (gameActive == 1)
+                    parent.GameActive = true;
                 await Task.Delay(1000);
                 parent.ExitQueue();
                 return;
