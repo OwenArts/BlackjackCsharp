@@ -17,6 +17,7 @@ public class StandCommand : BaseCommand
     public override void Execute(object? parameter)
     {
         _viewModel.HasTurn = false;
+        _viewModel.FirstTurn = false;
         _viewModel.Client.Stand();
     }
 

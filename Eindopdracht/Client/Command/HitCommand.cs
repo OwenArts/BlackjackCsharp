@@ -16,6 +16,7 @@ public class HitCommand : BaseCommand
 
     public override void Execute(object? parameter)
     {
+        _viewModel.FirstTurn = false;
         _viewModel.Client.RequestCard();
     }
 

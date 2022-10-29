@@ -14,6 +14,8 @@ public class TimerUpdate : IServerCommand
             var time = packet["data"]!["time"]!.ToObject<int>();
             var viewModel = (ClientViewModel)parent.ViewModel;
             viewModel.MiddleMessage = time.ToString();
+            if (time != 15) return;
+            viewModel.Reset();
         }
         catch(Exception e)
         {

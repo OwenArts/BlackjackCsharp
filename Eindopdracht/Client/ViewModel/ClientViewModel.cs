@@ -31,6 +31,7 @@ public class ClientViewModel : ObservableObject
 
     private bool _gameStarted;
     private bool _hasTurn;
+    private bool _firstTurn;
     private string _middleMessage = "plaats uw inleg";
     private int _money = 0;
     private string _bet = "";
@@ -51,6 +52,16 @@ public class ClientViewModel : ObservableObject
         set
         {
             _hasTurn = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public bool FirstTurn
+    {
+        get => _firstTurn;
+        set
+        {
+            _firstTurn = value;
             OnPropertyChanged();
         }
     }
@@ -117,6 +128,7 @@ public class ClientViewModel : ObservableObject
         _players = new List<Player>{ _self, _player1, _player2, _player3, _dealer };
         _gameStarted = false;
         _hasTurn = false;
+        _firstTurn = false;
         Money = Client.Balance;
 
         Hit = new HitCommand(this);
@@ -140,6 +152,7 @@ public class ClientViewModel : ObservableObject
         {
             player.Cards.Clear();
             player.Score = 0;
+            GameStarted = false;
         }
     }
 
