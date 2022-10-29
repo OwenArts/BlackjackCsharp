@@ -172,8 +172,11 @@ public class ServerClient
         }
     }
 
-    public void CalculateWin(int amountDealer)
+    public int CalculateWin(int amountDealer, int? testTotal = null)
     {
+        if (testTotal != null)
+            _totalValue = testTotal.Value;
+            
         int winstatus;
         if ((amountDealer > _totalValue && amountDealer <= 21) || _totalValue > 21 )
         {
@@ -196,6 +199,7 @@ public class ServerClient
         Bet = 0;
         _totalValue = 0;
         _amountOfAces = 0;
+        return winstatus;
     }
 
     private void InitCommands()
