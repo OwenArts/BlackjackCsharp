@@ -26,22 +26,14 @@ public class GiveCard : IServerCommand
         }
 
         var suite = packet["data"]!["suite"]!.ToObject<int>();
-        string imagePath = "";
-        switch (suite)
+        var imagePath = suite switch
         {
-            case 0:
-                imagePath = "h";
-                break;
-            case 1:
-                imagePath = "s";
-                break;
-            case 2:
-                imagePath = "d";
-                break;
-            case 3:
-                imagePath = "c";
-                break;
-        }
+            0 => "h",
+            1 => "s",
+            2 => "d",
+            3 => "c",
+            _ => ""
+        };
 
         imagePath += packet["data"]!["piece"]!.ToObject<int>().ToString();
         imagePath = Path.Combine(
@@ -50,8 +42,8 @@ public class GiveCard : IServerCommand
             $"{imagePath}.png");
         Log.Send().Debug(imagePath);
 
-        //todo, send card to the right observableCollection
-        _viewModel!.DealerCard.Add(imagePath);
-        _viewModel!.UpdateProperty();
+        var user = packet["data"]!["user"]!.ToObject<string>()!;
+        var value = packet["data"]!["value"]!.ToObject<int>()!;
+        _viewModel.UpdateCards(user, imagePath, value);
     }
 }
