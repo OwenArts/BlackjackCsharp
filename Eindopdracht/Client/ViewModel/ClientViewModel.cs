@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Windows.Input;
 using System.Windows.Media;
+using Client.Command;
 using Common;
 using MvvmHelpers;
 
@@ -9,7 +12,7 @@ namespace Client.ViewModel;
 
 public class ClientViewModel : ObservableObject
 {
-    private readonly Client_ _client;
+    public Client_ Client { get; }
     private readonly Log _log = new Log(typeof(ClientViewModel));
 
     private readonly Player _self;
@@ -24,6 +27,68 @@ public class ClientViewModel : ObservableObject
     public Player Player3 => _player3;
     public Player Dealer => _dealer;
     private List<Player> _players;
+
+
+    private bool _gameStarted;
+    private bool _hasTurn;
+    private string _middleMessage = "plaats uw inleg";
+    private int _money = 0;
+    private string _bet = "";
+    
+    public bool GameStarted
+    {
+        get => !_gameStarted;
+        set
+        {
+            _gameStarted = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public bool HasTurn
+    {
+        get => _hasTurn;
+        set
+        {
+            _hasTurn = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public string MiddleMessage
+    {
+        get => _middleMessage;
+        set
+        {
+            _middleMessage = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public int Money
+    {
+        get => _money;
+        set
+        {
+            _money = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public string Bet
+    {
+        get => _bet;
+        set
+        {
+            _bet = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public ICommand Hit { get; }
+    public ICommand Stand { get; }
+    public ICommand DoubleDown { get; }
+    public ICommand BetC { get; }
 
     public ClientViewModel(Client_ client)
     {
@@ -41,27 +106,42 @@ public class ClientViewModel : ObservableObject
         
         _log.Information("Client finished defining players");
 
-
-        _client = client;
-        _client.addViewModel(this);
-        _self = new Player(_client.Username);
+        
+        Client = client;
+        Client.AddViewModel(this);
+        _self = new Player(Client.Username);
         _player1 = new Player(player1);
         _player2 = new Player(player2);
         _player3 = new Player(player3);
         _dealer = new Player("Dealer");
         _players = new List<Player>{ _self, _player1, _player2, _player3, _dealer };
+        _gameStarted = false;
+        _hasTurn = false;
+        Money = Client.Balance;
+
+        Hit = new HitCommand(this);
+        Stand = new StandCommand(this);
+        DoubleDown = new DoubleDownCommand(this);
+        BetC = new BetCommand(this);
     }
 
     public void UpdateCards(string name, string card, int value)
     {
-        foreach (var player in _players)
+        foreach (var player in _players.Where(player => player.Name == name))
         {
-            if(player.Name != name) continue;
             player.AddCard(card);
             player.Score = value;
         }
     }
-    
+
+    public void Reset()
+    {
+        foreach (var player in _players)
+        {
+            player.Cards.Clear();
+            player.Score = 0;
+        }
+    }
 
 
     // public Patient CurrentUser

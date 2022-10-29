@@ -21,7 +21,7 @@ public class LoginWindowViewModel : ObservableObject
     public LoginWindowViewModel(NavigationStore navigationStore)
     {
         Client = navigationStore.Client;
-        Client.addViewModel(this);
+        Client.AddViewModel(this);
         LogIn = new LoginCommand(this,
             new NavigationService<QueueViewModel>(navigationStore,
                 () => new QueueViewModel(Client, navigationStore)));

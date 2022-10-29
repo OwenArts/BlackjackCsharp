@@ -67,7 +67,6 @@ public static class Util
                 currentObject![variable] = jsArray;
                 break;
         }
-        
         return data;
     }
 }
