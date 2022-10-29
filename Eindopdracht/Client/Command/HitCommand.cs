@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Client.Commands;
 using Client.ViewModel;
@@ -22,5 +23,6 @@ public class HitCommand : BaseCommand
 
     public override Task ExecuteAsync()
     {
+        throw new NotImplementedException();
     }
 }

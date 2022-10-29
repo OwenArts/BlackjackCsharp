@@ -36,5 +36,6 @@ public class BetCommand : BaseCommand
 
     public override Task ExecuteAsync()
     {
+        throw new NotImplementedException();
     }
 }
