@@ -6,9 +6,8 @@ namespace Server.CommandHandlers;
 
 public class ClientConnect : ICommandAction
 {
-
     private Log _log = new(typeof(ClientConnect));
-    
+
     public void OnCommandReceived(JObject packet, ServerClient parent)
     {
         var username = packet["data"]!["username"]!.ToObject<string>()!;
@@ -30,9 +29,9 @@ public class ClientConnect : ICommandAction
             parent.SelfDestruct(true);
             return;
         }
-        
+
         parent.Username = username;
-        
+
         if (parent.Parent.Clients.Count > 1)
         {
             _log.Information("told client to wait");

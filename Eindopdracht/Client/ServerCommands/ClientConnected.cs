@@ -26,9 +26,6 @@ public class ClientConnected : IServerCommand
             case 3:
                 MessageBox.Show("Er is geen account gevonden met dit wachtwoord en gebruikersnaam.");
                 break;
-            case 4:
-                MessageBox.Show("De ingevoerde gebruikersnaam is al in bezit genomen.");
-                break;
         }
         parent.SelfDestruct();
     }

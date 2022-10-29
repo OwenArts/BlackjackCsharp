@@ -95,6 +95,10 @@ public class Client_
             while (_totalBuffer.Length >= 4)
             {
                 var data = GetDecryptedMessage(_totalBuffer);
+                
+                _log.Debug($"OnRead: {data}");
+
+                
                 _totalBuffer = Array.Empty<byte>();
 
                 if (_commands.ContainsKey(data["id"]!.ToObject<string>()!))
@@ -114,6 +118,7 @@ public class Client_
 
     private void SendData(JObject message)
     {
+        _log.Debug($"senddata: {message}");
         var encryptedMessage = GetEncryptedMessage(message);
         try
         {
@@ -122,11 +127,11 @@ public class Client_
         catch (Exception e)
         {
             _log.Error(e, "SendData() err");
-            Stop();
+            // Stop();
         }
     }
 
-    public void Stop(bool destruct = false)
+    public void Stop(bool? destruct = false)
     {
         if (!_tcpClient.Connected) return;
         LoggedIn = false;
@@ -171,7 +176,7 @@ public class Client_
     {
         _commands.Add("client/connected", new ClientConnected());
         _commands.Add("client/disconnect", new Disconnected());
-        _commands.Add("client/givecard", new GiveCard());
+        _commands.Add("client/givecard", new GiveCard());                       //containt TODO
         _commands.Add("client/clientconnect", new ClientConnect());
         _commands.Add("client/returnclients", new ReturnClients());
         _commands.Add("client/giveturn", new GiveTurn());
@@ -184,7 +189,7 @@ public class Client_
     public async Task CreateAccountAsync(string ip)
     {
         _log.Debug($"CreateAccountCommand(); Username: {Username}; Password {Password}");
-        await Connect(ip);
+        await MakeConnectionAsync(ip);
         SendData(SendReplacedObject("username", Username, 1, SendReplacedObject(
             "password", Password, 1, "Requests\\createaccount.json"))!);
     }

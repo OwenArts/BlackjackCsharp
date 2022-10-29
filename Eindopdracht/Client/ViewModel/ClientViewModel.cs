@@ -8,8 +8,6 @@ namespace Client.ViewModel;
 
 public class ClientViewModel : ObservableObject
 {
-
-
     private Client_ _client;
     private Log _log = new Log(typeof(ClientViewModel));
 
@@ -17,11 +15,12 @@ public class ClientViewModel : ObservableObject
     private ObservableCollection<string> _player1Cards;
     private ObservableCollection<string> _player2Cards;
     private ObservableCollection<string> _player3Cards;
+
     private ObservableCollection<string> _player4Cards;
     // public ICommand EmergencyStop { get; }
-    
+
     // public ObservableCollection<string> _chatMessages;
-    
+
     private string _username;
     private string _score;
 
@@ -30,10 +29,17 @@ public class ClientViewModel : ObservableObject
         _client = client;
         _client.addViewModel(this);
         _score = "0";
+
+        _dealerCards = new ObservableCollection<string>();
+        _player1Cards = new ObservableCollection<string>();
+        _player2Cards = new ObservableCollection<string>();
+        _player3Cards = new ObservableCollection<string>();
+        _player4Cards = new ObservableCollection<string>();
+
         // _chatMessages = new ObservableCollection<string>();
         // EmergencyStop = new EmergencyStopCommand(_client, this);
     }
-    
+
     public string CurrentUserName
     {
         get => _username;
@@ -43,7 +49,7 @@ public class ClientViewModel : ObservableObject
             OnPropertyChanged();
         }
     }
-    
+
     public string Score
     {
         get => _score;
@@ -54,7 +60,61 @@ public class ClientViewModel : ObservableObject
         }
     }
 
+    public ObservableCollection<string> DealerCard
+    {
+        get => _dealerCards;
+        set
+        {
+            _dealerCards = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public ObservableCollection<string> Player1Card
+    {
+        get => _player1Cards;
+        set
+        {
+            _player1Cards = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public ObservableCollection<string> Player2Card
+    {
+        get => _player2Cards;
+        set
+        {
+            _player2Cards = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public ObservableCollection<string> Player3Card
+    {
+        get => _player3Cards;
+        set
+        {
+            _player3Cards = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public ObservableCollection<string> Player4Card
+    {
+        get => _player4Cards;
+        set
+        {
+            _player4Cards = value;
+            OnPropertyChanged();
+        }
+    }
     
+    public void UpdateProperty()
+    {
+        OnPropertyChanged();
+    }
+
 
     // public Patient CurrentUser
     // {
