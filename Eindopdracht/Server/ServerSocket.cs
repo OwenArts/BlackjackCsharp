@@ -51,4 +51,20 @@ public class ServerSocket
             player.CalculateWin(Dealer.TotalValue);
         }
     }
+
+    public void SendCounterUpdate(int time)
+    {
+        foreach (var player in Clients.Where(player => player.IsPlaying))
+        {
+            player.SendMessage(SendReplacedObject("time", time, 1, "Response\\timerupdate.json")!);
+        }
+    }
+
+    public void SendStartedUpdate()
+    {
+        foreach (var player in Clients.Where(player => player.IsPlaying))
+        {
+            player.SendMessage(GetJson("Response\\gamestarted.json"));
+        }
+    }
 }

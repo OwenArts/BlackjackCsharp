@@ -18,7 +18,7 @@ public class QueueViewModel : ObservableObject
     public QueueViewModel(Client_ client, NavigationStore navigationStore)
     {
         _client = client;
-        _client.addViewModel(this);
+        _client.AddViewModel(this);
         _navStore = navigationStore;
 
         JoinGame = new JoinGameCommand(this, 

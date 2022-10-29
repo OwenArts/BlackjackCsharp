@@ -32,7 +32,7 @@ public class ClientConnect : ICommandAction
 
         parent.Username = username;
 
-        if (parent.Parent.Clients.Count > 1)
+        if (parent.Parent.Clients.Count > 4)
         {
             _log.Information("told client to wait");
             parent.SendMessage(SendReplacedObject("status", 2, 1, "Response\\clientconnected.json")!);
