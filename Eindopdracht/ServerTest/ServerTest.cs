@@ -1,33 +1,36 @@
 using System.Net.Sockets;
 using Server;
+using Common;
 
 namespace ServerTest;
 
 [TestClass]
 public class ServerTest
 {
-    private ServerSocket _serverSocket;
-    private TcpClient _client;
-    private NetworkStream _stream;
-    private readonly byte[] _buffer = new byte[1024];
+    [TestMethod]
+    public void TestServerConnection()
+    {
+        new ServerSocket();
+        var client = new TcpClient();
 
+        client.Connect("localhost", 7492);
+
+        Task.Delay(1000);
+
+        Assert.AreEqual(true, client.Connected, "Failed to connect to server");
+    }
 
     [TestMethod]
-    public async void TestServerConnection()
+    public void TestServerSelfDestruct()
     {
-        _serverSocket = new ServerSocket();
-        _client = new TcpClient();
+        var server = new ServerSocket();
+        var client = new TcpClient();
 
-        await _client.ConnectAsync("localhost", 7492);
-        _stream = _client.GetStream();
-        _stream.BeginRead(_buffer, 0, 1024, null, null);
+        client.Connect("localhost", 7492);
+        
+        server.Clients[0].SelfDestruct(true);
+        
+        Assert.AreEqual(false, client.Connected, "Failed to self destruct client");
 
-        Assert.AreEqual(true, _client.Connected, "Failed to connect to server");
     }
-    
-    // [TestMethod]
-    // public async void TestServerOnRead()
-    // {
-    //     Assert.AreEqual(true, _client.Connected, "Failed to connect to server");
-    // }
 }
