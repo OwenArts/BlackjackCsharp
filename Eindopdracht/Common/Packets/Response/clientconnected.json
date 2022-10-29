@@ -2,6 +2,7 @@
   "id": "client/connected",
   "data": {
     "status": 1,
-    "money": -1
+    "money": -1,
+    "active": false
   }
 }

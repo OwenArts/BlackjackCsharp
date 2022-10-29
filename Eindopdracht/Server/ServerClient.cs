@@ -118,6 +118,7 @@ public class ServerClient
         }
 
         if (_totalValue <= 21) return;
+        SendMessage(GetJson("Response\\gobust.json"));
         Parent.Dealer.GiveTurn();
     }
 
@@ -160,7 +161,9 @@ public class ServerClient
         _log.Information("client " + Username + " can play");
         IsPlaying = true;
         SendMessage(SendReplacedObject("status", 0, 1, SendReplacedObject(
-            "money", Money, 1, "Response\\clientconnected.json"
+            "money", Money, 1, SendReplacedObject(
+                "active", Parent.GameActive, 1, "Response\\clientconnected.json"
+            )
         ))!);
     }
 

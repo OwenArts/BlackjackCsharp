@@ -7,7 +7,9 @@ public class GameStarted : IServerCommand
 {
     public void OnCommandReceivedAsync(JObject packet, Client_ parent)
     {
+        if (!parent.IsPlaying) return;
         var viewModel = (ClientViewModel)parent.ViewModel;
         viewModel.GameStarted = true;
+        viewModel.MiddleMessage = "";
     }
 }

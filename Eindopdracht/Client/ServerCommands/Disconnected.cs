@@ -8,6 +8,7 @@ public class Disconnected : IServerCommand
 {
     public void OnCommandReceivedAsync(JObject packet, Client_ parent)
     {
+        if (!parent.IsPlaying) return;
         var disconnectedClient = packet["data"]!["user"]!.ToObject<string>()!;
         var viewModel = (ClientViewModel)parent.ViewModel;
         Log.Send().Information(disconnectedClient);

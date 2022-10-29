@@ -15,6 +15,7 @@ public class GiveCard : IServerCommand
 
     public void OnCommandReceivedAsync(JObject packet, Client_ parent)
     {
+        if (!parent.IsPlaying) return;
         try
         {
             _viewModel = (ClientViewModel)parent.ViewModel;

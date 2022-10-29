@@ -9,6 +9,7 @@ public class WinStatus : IServerCommand
 {
     public void OnCommandReceivedAsync(JObject packet, Client_ parent)
     {
+        if (!parent.IsPlaying) return;
         var status = packet["data"]!["win"]!.ToObject<int>();
         var balance = packet["data"]!["balance"]!.ToObject<int>();
         var viewModel = (ClientViewModel)parent.ViewModel;
@@ -21,6 +22,5 @@ public class WinStatus : IServerCommand
             _ => viewModel.MiddleMessage
         };
         Thread.Sleep(4000);
-        viewModel.Reset();
     }
 }

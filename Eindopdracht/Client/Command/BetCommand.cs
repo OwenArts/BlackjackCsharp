@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using Client.Commands;
@@ -30,8 +31,10 @@ public class BetCommand : BaseCommand
             return;
         }
         _viewModel.Client.Bet(betInt);
-        if(_viewModel.Money >= betInt)
-            _viewModel.Money -= betInt;
+        if (_viewModel.Money < betInt) return;
+        _viewModel.Money -= betInt;
+        _viewModel.GameStarted = true;
+
     }
 
     public override Task ExecuteAsync()
