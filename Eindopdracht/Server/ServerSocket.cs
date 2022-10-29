@@ -48,6 +48,7 @@ public class ServerSocket
     {
         foreach (var player in Dealer.PlayingClients)
         {
+            Log.Send().Information(player.Username);
             player.CalculateWin(Dealer.TotalValue);
         }
     }

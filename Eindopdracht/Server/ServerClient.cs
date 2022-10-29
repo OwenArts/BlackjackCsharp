@@ -100,7 +100,6 @@ public class ServerClient
     private void Bust()
     {
         Parent.Dealer.GiveTurn();
-        Money -= Bet;
         _bust = true;
     }
 
@@ -187,7 +186,7 @@ public class ServerClient
     public void CalculateWin(int amountDealer)
     {
         int winstatus;
-        if ((amountDealer > _totalValue && amountDealer <= 21 ) || _bust )
+        if ((amountDealer > _totalValue && amountDealer <= 21) || _bust )
         {
             Money -= Bet;
             winstatus = 0;
