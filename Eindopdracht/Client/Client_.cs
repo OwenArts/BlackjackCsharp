@@ -117,7 +117,7 @@ public class Client_
         }
         catch (Exception e)
         {
-            _log.Error(e, "OnRead() err");
+            _log.Error(e, e.Message + "\nOnRead() err");
             Stop();
         }
     }
