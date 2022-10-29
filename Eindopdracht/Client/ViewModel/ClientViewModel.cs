@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Media;
 using Common;
@@ -8,112 +9,59 @@ namespace Client.ViewModel;
 
 public class ClientViewModel : ObservableObject
 {
-    private Client_ _client;
-    private Log _log = new Log(typeof(ClientViewModel));
+    private readonly Client_ _client;
+    private readonly Log _log = new Log(typeof(ClientViewModel));
 
-    private ObservableCollection<string> _dealerCards;
-    private ObservableCollection<string> _player1Cards;
-    private ObservableCollection<string> _player2Cards;
-    private ObservableCollection<string> _player3Cards;
+    private readonly Player _self;
+    private readonly Player _player1;
+    private readonly Player _player2;
+    private readonly Player _player3;
+    private readonly Player _dealer;
 
-    private ObservableCollection<string> _player4Cards;
-    // public ICommand EmergencyStop { get; }
-
-    // public ObservableCollection<string> _chatMessages;
-
-    private string _username;
-    private string _score;
+    public Player Self => _self;
+    public Player Player1 => _player1;
+    public Player Player2 => _player2;
+    public Player Player3 => _player3;
+    public Player Dealer => _dealer;
+    private List<Player> _players;
 
     public ClientViewModel(Client_ client)
     {
+        var player1 = "";
+        var player2 = "";
+        var player3 = "";
+        var otherPlayers = client.OtherPlayers;
+        _log.Information("Client got to here");
+        if (otherPlayers.Length > 0)
+            player1 = otherPlayers[0];
+        if (otherPlayers.Length > 1)
+            player2 = otherPlayers[1];
+        if (otherPlayers.Length > 2)
+            player3 = otherPlayers[2];
+        
+        _log.Information("Client finished defining players");
+
+
         _client = client;
         _client.addViewModel(this);
-        _score = "0";
-
-        _dealerCards = new ObservableCollection<string>();
-        _player1Cards = new ObservableCollection<string>();
-        _player2Cards = new ObservableCollection<string>();
-        _player3Cards = new ObservableCollection<string>();
-        _player4Cards = new ObservableCollection<string>();
-
-        // _chatMessages = new ObservableCollection<string>();
-        // EmergencyStop = new EmergencyStopCommand(_client, this);
+        _self = new Player(_client.Username);
+        _player1 = new Player(player1);
+        _player2 = new Player(player2);
+        _player3 = new Player(player3);
+        _dealer = new Player("Dealer");
+        _players = new List<Player>{ _self, _player1, _player2, _player3, _dealer };
     }
 
-    public string CurrentUserName
+    public void UpdateCards(string name, string card, int value)
     {
-        get => _username;
-        set
+        foreach (var player in _players)
         {
-            _username = value;
-            OnPropertyChanged();
-        }
-    }
-
-    public string Score
-    {
-        get => _score;
-        set
-        {
-            _score = value;
-            OnPropertyChanged();
-        }
-    }
-
-    public ObservableCollection<string> DealerCard
-    {
-        get => _dealerCards;
-        set
-        {
-            _dealerCards = value;
-            OnPropertyChanged();
-        }
-    }
-
-    public ObservableCollection<string> Player1Card
-    {
-        get => _player1Cards;
-        set
-        {
-            _player1Cards = value;
-            OnPropertyChanged();
-        }
-    }
-
-    public ObservableCollection<string> Player2Card
-    {
-        get => _player2Cards;
-        set
-        {
-            _player2Cards = value;
-            OnPropertyChanged();
-        }
-    }
-
-    public ObservableCollection<string> Player3Card
-    {
-        get => _player3Cards;
-        set
-        {
-            _player3Cards = value;
-            OnPropertyChanged();
-        }
-    }
-
-    public ObservableCollection<string> Player4Card
-    {
-        get => _player4Cards;
-        set
-        {
-            _player4Cards = value;
-            OnPropertyChanged();
+            if(player.Name != name) continue;
+            player.AddCard(card);
+            player.Score = value;
         }
     }
     
-    public void UpdateProperty()
-    {
-        OnPropertyChanged();
-    }
 
 
     // public Patient CurrentUser

@@ -33,11 +33,14 @@ public class Client_
     public int Balance { get; set; }
     public bool LoggedIn { get; set; }
 
+    public string[] OtherPlayers { get; set; }
+
     public Client_()
     {
         _commands = new Dictionary<string, IServerCommand>();
         InitCommands();
         _tcpClient = new TcpClient();
+        OtherPlayers = Array.Empty<string>();
     }
 
     public async Task MakeConnectionAsync(string ip)

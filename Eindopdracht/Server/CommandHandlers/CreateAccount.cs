@@ -19,20 +19,18 @@ public class CreateAccount : ICommandAction
         foreach (var acc in accounts)
         {
             Log.Send().Error($"Username, {username} : found: {acc[0]}");
-            if (acc[0] == username)
+            if (acc[0] != username) continue;
+            try
             {
-                try
-                {
-                    parent.SendMessage(SendReplacedObject("status", 1, 1, "Response\\accountcreated.json")!);
-                    parent.SelfDestruct(true);
-                }
-                catch (Exception e)
-                {
-                    Log.Send().Error(e, "Could not send message");
-                    throw;
-                }
-                return;
+                parent.SendMessage(SendReplacedObject("status", 1, 1, "Response\\accountcreated.json")!);
+                parent.SelfDestruct(true);
             }
+            catch (Exception e)
+            {
+                Log.Send().Error(e, "Could not send message");
+                throw;
+            }
+            return;
         }
 
 
