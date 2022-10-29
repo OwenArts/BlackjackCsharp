@@ -101,7 +101,6 @@ public class Client_
                 
                 _log.Debug($"OnRead: {data}");
 
-                
                 _totalBuffer = Array.Empty<byte>();
 
                 if (_commands.ContainsKey(data["id"]!.ToObject<string>()!))
