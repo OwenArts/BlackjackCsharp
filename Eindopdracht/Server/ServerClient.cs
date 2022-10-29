@@ -9,7 +9,6 @@ namespace Server;
 
 public class ServerClient
 {
-
     public ServerSocket Parent { get; }
     private readonly TcpClient _tcp;
     private readonly NetworkStream _stream;
@@ -20,7 +19,7 @@ public class ServerClient
     private byte[] _totalBuffer = Array.Empty<byte>();
     private readonly byte[] _buffer = new byte[1024];
 
-    private readonly Log _log = new Log(typeof(ServerClient));
+    private readonly Log _log = new(typeof(ServerClient));
     public string Username { get; set; }
     public bool IsPlaying { get; set; }
     public int Bet { get; set; }

@@ -68,7 +68,7 @@ public class Client_
                 _tcpClient.Close();
                 _tcpClient = new TcpClient();
 
-                if (attempts == 5)
+                if (attempts >= 5)
                 {
                     _log.Error(ex, $"Could not connect to {ip}:{Port}");
                     throw;
