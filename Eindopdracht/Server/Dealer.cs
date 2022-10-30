@@ -1,6 +1,4 @@
-using System.ComponentModel;
 using Common;
-using Server.CommandHandlers;
 
 namespace Server;
 
@@ -39,6 +37,7 @@ public class Dealer
             Thread.Sleep(1000);
         }
 
+        _parent.GameActive = true;
         _timerStarted = false;
         PlayingClients.Clear();
         TotalValue = 0;

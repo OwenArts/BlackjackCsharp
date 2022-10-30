@@ -32,7 +32,8 @@ public class Client_
     public string Password { get; set; }
     public int Balance { get; set; }
     public bool LoggedIn { get; set; }
-
+    public bool IsPlaying { get; set; }
+    public bool GameActive { get; set; }
     public string[] OtherPlayers { get; set; }
 
     public Client_()
@@ -41,6 +42,8 @@ public class Client_
         InitCommands();
         _tcpClient = new TcpClient();
         OtherPlayers = Array.Empty<string>();
+        GameActive = false;
+        IsPlaying = false;
     }
 
     public async Task MakeConnectionAsync(string ip)
@@ -113,7 +116,7 @@ public class Client_
         }
         catch (Exception e)
         {
-            _log.Error(e, "OnRead() err");
+            _log.Error(e, e.Message + "\nOnRead() err");
             Stop();
         }
     }
@@ -187,6 +190,8 @@ public class Client_
         _commands.Add("client/winstatus", new WinStatus());
         _commands.Add("client/accountcreated", new AccountCreated());
         _commands.Add("client/timerupdate", new TimerUpdate());
+        _commands.Add("client/gamestarted", new GameStarted());
+        _commands.Add("client/endgame", new StopGame());
     }
 
     public async Task CreateAccountAsync(string ip)

@@ -8,6 +8,7 @@ namespace Server;
 public class ServerSocket
 {
     public List<ServerClient> Clients { get; }
+    public bool GameActive { get; set; }
     private readonly TcpListener _listener;
     private const int Port = 7492;
     public Dealer Dealer { get; }
@@ -50,6 +51,14 @@ public class ServerSocket
         {
             Log.Send().Information(player.Username);
             player.CalculateWin(Dealer.TotalValue);
+        }
+
+        GameActive = false;
+        Thread.Sleep(4000);
+        foreach (var player in Clients)
+        {
+            if(!player.IsPlaying) continue;
+            player.SendMessage(GetJson("Response\\endgame.json"));
         }
     }
 

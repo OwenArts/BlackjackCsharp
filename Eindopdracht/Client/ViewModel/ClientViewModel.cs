@@ -126,7 +126,17 @@ public class ClientViewModel : ObservableObject
         _player3 = new Player(player3);
         _dealer = new Player("Dealer");
         _players = new List<Player>{ _self, _player1, _player2, _player3, _dealer };
-        _gameStarted = false;
+
+        if (Client.GameActive)
+        {
+            _gameStarted = true;
+            MiddleMessage = "Wacht alstublieft totdat het huidige spel voorbij is";
+        }
+        else
+        {
+            _gameStarted = false;            
+        }
+        
         _hasTurn = false;
         _firstTurn = false;
         Money = Client.Balance;
@@ -152,8 +162,8 @@ public class ClientViewModel : ObservableObject
         {
             player.Cards.Clear();
             player.Score = 0;
-            GameStarted = false;
         }
+        GameStarted = false;
     }
 
 

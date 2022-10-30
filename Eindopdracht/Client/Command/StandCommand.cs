@@ -19,6 +19,7 @@ public class StandCommand : BaseCommand
     {
         _viewModel.HasTurn = false;
         _viewModel.FirstTurn = false;
+        _viewModel.MiddleMessage = "";
         _viewModel.Client.Stand();
     }
 

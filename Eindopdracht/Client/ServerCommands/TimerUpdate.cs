@@ -9,13 +9,12 @@ public class TimerUpdate : IServerCommand
 {
     public void OnCommandReceivedAsync(JObject packet, Client_ parent)
     {
+        if (!parent.IsPlaying) return;
         try
         {
             var time = packet["data"]!["time"]!.ToObject<int>();
             var viewModel = (ClientViewModel)parent.ViewModel;
             viewModel.MiddleMessage = time.ToString();
-            if (time != 15) return;
-            viewModel.Reset();
         }
         catch(Exception e)
         {

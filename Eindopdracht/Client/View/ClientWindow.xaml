@@ -106,7 +106,7 @@
         <Button Command="{Binding Hit}" Content="Hit" HorizontalAlignment="Left" Margin="10,48,0,0" Grid.Row="4" VerticalAlignment="Top" FontSize="14" Height="32" Width="58" IsEnabled="{Binding HasTurn}"/>
         <Button Command="{Binding Stand}" Content="Stand" HorizontalAlignment="Left" Margin="80,48,0,0" Grid.Row="4" VerticalAlignment="Top" FontSize="14" Height="32" Width="58" IsEnabled="{Binding HasTurn}"/>
         <Button Command="{Binding DoubleDown}" Content="Double Down" HorizontalAlignment="Left" Margin="10,4,0,0" Grid.Row="4" VerticalAlignment="Top" FontSize="14" Height="32" Width="128" IsEnabled="{Binding FirstTurn}"/>
-        <TextBlock Grid.Column="2" HorizontalAlignment="Center" Grid.Row="2" TextWrapping="Wrap" Text="{Binding MiddleMessage}" VerticalAlignment="Center" FontSize="18" FontWeight="Bold" Foreground="White"/>
+        <TextBlock Grid.Column="2" HorizontalAlignment="Center" Grid.Row="2" TextWrapping="Wrap" Text="{Binding MiddleMessage}" VerticalAlignment="Center" FontSize="32" FontWeight="Bold" Foreground="White"/>
 
 
     </Grid>

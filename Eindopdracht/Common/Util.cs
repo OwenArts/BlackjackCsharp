@@ -66,6 +66,9 @@ public static class Util
                 var jsArray = JArray.FromObject(sArray);
                 currentObject![variable] = jsArray;
                 break;
+            case bool b:
+                currentObject![variable] = b;
+                break;
         }
         return data;
     }

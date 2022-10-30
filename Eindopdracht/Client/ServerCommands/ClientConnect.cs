@@ -7,6 +7,7 @@ public class ClientConnect : IServerCommand
 {
     public void OnCommandReceivedAsync(JObject packet, Client_ parent)
     {
+        if (!parent.IsPlaying) return;
         var connectedClient = packet["data"]!["user"]!.ToObject<string>()!;
         var viewModel = (ClientViewModel)parent.ViewModel;
         if (viewModel.Player1.Name == "") viewModel.Player1.Name = connectedClient;
