@@ -38,7 +38,7 @@ public static class Util
     
     public static JObject? SendReplacedObject<TR, TO>(string variable, TR replacement, int position, TO targetObject)
     {
-        Log.Send().Information(PathDir);
+        // Log.Send().Information(PathDir);
         
         var data = targetObject switch
         {
