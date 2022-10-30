@@ -8,6 +8,13 @@ public class NavigationStore
     public event Action CurrentViewModelChanged;
     private ObservableObject _currentViewModel;
 
+    public Client_ Client { get; }
+
+    public NavigationStore()
+    {
+        Client = new();
+    }
+
     public ObservableObject CurrentViewModel
     {
         get => _currentViewModel;

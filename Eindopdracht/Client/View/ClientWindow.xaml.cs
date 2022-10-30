@@ -1,6 +1,6 @@
 using System.Windows.Controls;
 
-namespace Client.view;
+namespace Client.View;
 
 public partial class ClientWindow : UserControl
 {

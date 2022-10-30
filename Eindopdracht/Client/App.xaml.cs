@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using Client.ViewModel;
+using Common;
 
 namespace Client
 {
@@ -14,19 +15,25 @@ namespace Client
     /// </summary>
     public partial class App : Application
     {
+        private NavigationStore _navigationStore;
         protected override void OnStartup(StartupEventArgs e)
         {
-            NavigationStore navigationStore = new NavigationStore();
+            _navigationStore = new NavigationStore();
 
-            navigationStore.CurrentViewModel = new LoginWindowViewModel(navigationStore);
-                
+            _navigationStore.CurrentViewModel = new LoginWindowViewModel(_navigationStore);
+
             MainWindow = new MainWindow()
             {
-                DataContext = new MainViewModel(navigationStore)
+                DataContext = new MainViewModel(_navigationStore)
             };
             MainWindow.Show();
 
             base.OnStartup(e);
+        }
+
+        private void App_Exit(object sender, ExitEventArgs e)
+        {
+            _navigationStore.Client.Stop();
         }
     }
 }

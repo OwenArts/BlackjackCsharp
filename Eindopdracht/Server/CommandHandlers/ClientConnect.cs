@@ -6,6 +6,8 @@ namespace Server.CommandHandlers;
 
 public class ClientConnect : ICommandAction
 {
+    private Log _log = new(typeof(ClientConnect));
+
     public void OnCommandReceived(JObject packet, ServerClient parent)
     {
         var username = packet["data"]!["username"]!.ToObject<string>()!;
@@ -28,15 +30,15 @@ public class ClientConnect : ICommandAction
             return;
         }
 
-        if (parent.Parent.Clients.Count >= 4)
+        parent.Username = username;
+
+        if (parent.Parent.Clients.Count > 4)
         {
+            _log.Information("told client to wait");
             parent.SendMessage(SendReplacedObject("status", 2, 1, "Response\\clientconnected.json")!);
-            parent.SelfDestruct(true);
             return;
         }
-
-        parent.Username = username;
-        Log.Send().Information("Login Successful");
-        parent.SendMessage(SendReplacedObject("status", 0, 1, "Response\\clientconnected.json")!);
+        
+        parent.Play();
     }
 }

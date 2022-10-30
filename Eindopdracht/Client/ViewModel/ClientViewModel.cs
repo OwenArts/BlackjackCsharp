@@ -1,6 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Windows.Input;
 using System.Windows.Media;
+using Client.Command;
 using Common;
 using MvvmHelpers;
 
@@ -8,33 +12,150 @@ namespace Client.ViewModel;
 
 public class ClientViewModel : ObservableObject
 {
-    private Client_ _client;
-    private Log _log = new Log(typeof(ClientViewModel));
-    // public ICommand EmergencyStop { get; }
-    
-    // public ObservableCollection<string> _chatMessages;
-    
-    private string username;
+    public Client_ Client { get; }
+    private readonly Log _log = new Log(typeof(ClientViewModel));
 
-    public ClientViewModel(Client_ client, NavigationStore navStore)
-    {
-        _client = client;
-        _client.ViewModel = this;
-        // _chatMessages = new ObservableCollection<string>();
-        // EmergencyStop = new EmergencyStopCommand(_client, this);
-    }
+    private readonly Player _self;
+    private readonly Player _player1;
+    private readonly Player _player2;
+    private readonly Player _player3;
+    private readonly Player _dealer;
+
+    public Player Self => _self;
+    public Player Player1 => _player1;
+    public Player Player2 => _player2;
+    public Player Player3 => _player3;
+    public Player Dealer => _dealer;
+    private List<Player> _players;
+
+
+    private bool _gameStarted;
+    private bool _hasTurn;
+    private bool _firstTurn;
+    private string _middleMessage = "plaats uw inleg";
+    private int _money = 0;
+    private string _bet = "";
     
-    public string CurrentUserName
+    public bool GameStarted
     {
-        get => username;
+        get => !_gameStarted;
         set
         {
-            username = value;
-            OnPropertyChanged(nameof(CurrentUserName));
+            _gameStarted = value;
+            OnPropertyChanged();
         }
     }
 
-    
+    public bool HasTurn
+    {
+        get => _hasTurn;
+        set
+        {
+            _hasTurn = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public bool FirstTurn
+    {
+        get => _firstTurn;
+        set
+        {
+            _firstTurn = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public string MiddleMessage
+    {
+        get => _middleMessage;
+        set
+        {
+            _middleMessage = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public int Money
+    {
+        get => _money;
+        set
+        {
+            _money = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public string Bet
+    {
+        get => _bet;
+        set
+        {
+            _bet = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public ICommand Hit { get; }
+    public ICommand Stand { get; }
+    public ICommand DoubleDown { get; }
+    public ICommand BetC { get; }
+
+    public ClientViewModel(Client_ client)
+    {
+        var player1 = "";
+        var player2 = "";
+        var player3 = "";
+        var otherPlayers = client.OtherPlayers;
+        _log.Information("Client got to here");
+        if (otherPlayers.Length > 0)
+            player1 = otherPlayers[0];
+        if (otherPlayers.Length > 1)
+            player2 = otherPlayers[1];
+        if (otherPlayers.Length > 2)
+            player3 = otherPlayers[2];
+        
+        _log.Information("Client finished defining players");
+
+        
+        Client = client;
+        Client.AddViewModel(this);
+        _self = new Player(Client.Username);
+        _player1 = new Player(player1);
+        _player2 = new Player(player2);
+        _player3 = new Player(player3);
+        _dealer = new Player("Dealer");
+        _players = new List<Player>{ _self, _player1, _player2, _player3, _dealer };
+        _gameStarted = false;
+        _hasTurn = false;
+        _firstTurn = false;
+        Money = Client.Balance;
+
+        Hit = new HitCommand(this);
+        Stand = new StandCommand(this);
+        DoubleDown = new DoubleDownCommand(this);
+        BetC = new BetCommand(this);
+    }
+
+    public void UpdateCards(string name, string card, int value)
+    {
+        foreach (var player in _players.Where(player => player.Name == name))
+        {
+            player.AddCard(card);
+            player.Score = value;
+        }
+    }
+
+    public void Reset()
+    {
+        foreach (var player in _players)
+        {
+            player.Cards.Clear();
+            player.Score = 0;
+            GameStarted = false;
+        }
+    }
+
 
     // public Patient CurrentUser
     // {

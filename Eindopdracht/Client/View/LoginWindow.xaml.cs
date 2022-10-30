@@ -1,7 +1,7 @@
 using System.Windows;
 using System.Windows.Controls;
 
-namespace Client.view;
+namespace Client.View;
 
 public partial class LoginWindow : UserControl
 {

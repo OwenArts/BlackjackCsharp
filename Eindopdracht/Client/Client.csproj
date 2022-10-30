@@ -14,15 +14,16 @@
 
     <ItemGroup>
       <PackageReference Include="Refractored.MvvmHelpers" Version="1.6.2" />
+      <PackageReference Include="WpfAnimatedGif" Version="2.0.2" />
     </ItemGroup>
 
     <ItemGroup>
       <None Remove="Image\Background.png" />
       <Resource Include="Image\Background.png" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Packets" />
+      <None Remove="Image\loading.gif" />
+      <Resource Include="Image\loading.gif" />
+      <None Remove="Image\Blackjack_texture.png" />
+      <Resource Include="Image\Blackjack_texture.png" />
     </ItemGroup>
 
 </Project>
