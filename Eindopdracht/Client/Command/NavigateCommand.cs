@@ -19,7 +19,7 @@ public class NavigateCommand : BaseCommand
         ExecuteAsync();
     }
 
-    public async override Task ExecuteAsync()
+    public override async Task ExecuteAsync()
     {
         _navigationStore.CurrentViewModel = _viewModel;
     }

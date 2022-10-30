@@ -62,7 +62,7 @@ public class Client_
 
             try
             {
-                await Connect(ip);
+                await ConnectAsync(ip);
                 _log.Information($"Connected to {ip}:{Port}");
                 break;
             }
@@ -84,7 +84,7 @@ public class Client_
         }
     }
 
-    private async Task Connect(string ip)
+    private async Task ConnectAsync(string ip)
     {
         await _tcpClient.ConnectAsync(ip, Port);
         _stream = _tcpClient.GetStream();
@@ -102,7 +102,7 @@ public class Client_
             {
                 var data = GetDecryptedMessage(_totalBuffer);
                 
-                _log.Debug($"OnRead: {data}");
+                _log.Debug($"OnRead: \n{data}");
 
                 _totalBuffer = Array.Empty<byte>();
 
