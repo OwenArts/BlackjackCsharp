@@ -1,0 +1,8 @@
+{
+  "id": "client/connected",
+  "data": {
+    "status": 0,
+    "money": 0,
+    "active": 0
+  }
+}
