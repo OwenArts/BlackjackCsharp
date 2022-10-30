@@ -34,8 +34,8 @@ public class ClientConnect : ICommandAction
 
         if (parent.Parent.Clients.Count > 4)
         {
-            _log.Information("told client to wait");
             parent.SendMessage(SendReplacedObject("status", 2, 1, "Response\\clientconnected.json")!);
+            parent.SelfDestruct(true);
             return;
         }
         

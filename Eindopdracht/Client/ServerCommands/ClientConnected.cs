@@ -27,8 +27,8 @@ public class ClientConnected : IServerCommand
                 MessageBox.Show("Er is al een apparaat met dit account ingelogd.");
                 break;
             case 2:
-                parent.LoggedIn = true;
-                return;
+                MessageBox.Show("Er zijn helaas te veel spelers in het spel. Probeer het later opnieuw.");
+                break;
             case 3:
                 MessageBox.Show("Er is geen account gevonden met dit wachtwoord en gebruikersnaam.");
                 break;
