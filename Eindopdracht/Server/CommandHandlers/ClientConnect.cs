@@ -16,7 +16,7 @@ public class ClientConnect : ICommandAction
 
         if (parent.Parent.Clients.Any(client => client.Username == username))
         {
-            parent.SendMessage(SendReplacedObject("status", 1, 1, "Response\\clientconnected.json")!);
+            parent.SendMessageAsync(SendReplacedObject("status", 1, 1, "Response\\clientconnected.json")!);
             parent.SelfDestruct(true);
             return;
         }
@@ -25,7 +25,7 @@ public class ClientConnect : ICommandAction
 
         if (!exists)
         {
-            parent.SendMessage(SendReplacedObject("status", 3, 1, "Response\\clientconnected.json")!);
+            parent.SendMessageAsync(SendReplacedObject("status", 3, 1, "Response\\clientconnected.json")!);
             parent.SelfDestruct(true);
             return;
         }
@@ -35,7 +35,7 @@ public class ClientConnect : ICommandAction
         if (parent.Parent.Clients.Count > 4)
         {
             _log.Information("told client to wait");
-            parent.SendMessage(SendReplacedObject("status", 2, 1, "Response\\clientconnected.json")!);
+            parent.SendMessageAsync(SendReplacedObject("status", 2, 1, "Response\\clientconnected.json")!);
             return;
         }
         

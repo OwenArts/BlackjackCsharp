@@ -22,7 +22,7 @@ public class CreateAccount : ICommandAction
             if (acc[0] != username) continue;
             try
             {
-                parent.SendMessage(SendReplacedObject("status", 1, 1, "Response\\accountcreated.json")!);
+                parent.SendMessageAsync(SendReplacedObject("status", 1, 1, "Response\\accountcreated.json")!);
                 parent.SelfDestruct(true);
             }
             catch (Exception e)
@@ -47,7 +47,7 @@ public class CreateAccount : ICommandAction
         Log.Send().Debug($"Writing to Acounts.json: {oAccounts}");
 
         WriteJson(oAccounts, "Storage\\accounts.json");
-        parent.SendMessage(SendReplacedObject("status", 0, 1, "Response\\accountcreated.json")!);
+        parent.SendMessageAsync(SendReplacedObject("status", 0, 1, "Response\\accountcreated.json")!);
 
         /*
         if (accounts.Any(account => account[0] != username))

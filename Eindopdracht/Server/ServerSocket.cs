@@ -35,7 +35,7 @@ public class ServerSocket
     {
         foreach (var client in Clients)
         {
-            client.SendMessage(SendReplacedObject("user", "Dealer", 1, SendReplacedObject(
+            client.SendMessageAsync(SendReplacedObject("user", "Dealer", 1, SendReplacedObject(
                 "piece", piece, 1, SendReplacedObject(
                     "suite", suite, 1, SendReplacedObject(
                         "value", value, 1, "Response\\givecard.json"
@@ -58,7 +58,7 @@ public class ServerSocket
         foreach (var player in Clients)
         {
             if(!player.IsPlaying) continue;
-            player.SendMessage(GetJson("Response\\endgame.json"));
+            player.SendMessageAsync(GetJson("Response\\endgame.json"));
         }
     }
 
@@ -66,7 +66,7 @@ public class ServerSocket
     {
         foreach (var player in Clients.Where(player => player.IsPlaying))
         {
-            player.SendMessage(SendReplacedObject("time", time, 1, "Response\\timerupdate.json")!);
+            player.SendMessageAsync(SendReplacedObject("time", time, 1, "Response\\timerupdate.json")!);
         }
     }
 
@@ -74,7 +74,7 @@ public class ServerSocket
     {
         foreach (var player in Clients.Where(player => player.IsPlaying))
         {
-            player.SendMessage(GetJson("Response\\gamestarted.json"));
+            player.SendMessageAsync(GetJson("Response\\gamestarted.json"));
         }
     }
 }

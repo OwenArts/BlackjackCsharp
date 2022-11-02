@@ -45,11 +45,11 @@ public class ServerClient
         _stream.BeginRead(_buffer, 0, 1024, OnRead, null);
     }
 
-    public void SendMessage(JObject packet)
+    public async Task SendMessageAsync(JObject packet)
     {
         _log.Debug($"SendMessage: {packet}");
         byte[] encryptedMessage = GetEncryptedMessage(packet);
-        _stream.Write(encryptedMessage, 0, encryptedMessage.Length);
+        await _stream.WriteAsync(encryptedMessage, 0, encryptedMessage.Length);
     }
 
     private void OnRead(IAsyncResult ar)
@@ -89,12 +89,12 @@ public class ServerClient
         _tcp.Close();
     }
 
-    public void NotifyTurn()
+    public async void NotifyTurn()
     {
-        SendMessage(GetJson("Response\\giveturn.json"));
+        await SendMessageAsync(GetJson("Response\\giveturn.json"));
     }
 
-    public void GiveCard(Card card)
+    public async void GiveCard(Card card)
     {
         _totalValue += card.Value;
         if (card.Piece == 14) _amountOfAces++;
@@ -107,7 +107,7 @@ public class ServerClient
 
         foreach (var client in Parent.Clients)
         {
-            client.SendMessage(SendReplacedObject("user", Username, 1, SendReplacedObject(
+            await client.SendMessageAsync(SendReplacedObject("user", Username, 1, SendReplacedObject(
                 "piece", card.Piece, 1, SendReplacedObject(
                     "suite", card.Suite, 1, SendReplacedObject(
                         "value", _totalValue, 1, "Response\\givecard.json"
@@ -117,16 +117,16 @@ public class ServerClient
         }
 
         if (_totalValue <= 21) return;
-        SendMessage(GetJson("Response\\gobust.json"));
+        await SendMessageAsync(GetJson("Response\\gobust.json"));
         Parent.Dealer.GiveTurn();
     }
 
-    public int PlaceBet(int bet)
+    public async void PlaceBet(int bet)
     {
         if (bet > Money)
         {
-            SendMessage(GetJson("Response\\invalidbet.json"));
-            return -1;
+            await SendMessageAsync(GetJson("Response\\invalidbet.json"));
+            return;
         }
 
         Parent.Dealer.StartTimer();
@@ -134,15 +134,15 @@ public class ServerClient
         return Bet;
     }
 
-    public int DoubleDown(int? testBet = null)
+    public async void DoubleDown()
     {
         if (testBet != null)
             Bet = testBet.Value;
         
         if (Bet * 2 > Money)
         {
-            SendMessage(GetJson("Response\\invalidbet.json"));
-            return Bet;
+            await SendMessageAsync(GetJson("Response\\invalidbet.json"));
+            return;
         }
 
         Bet *= 2;
@@ -151,17 +151,17 @@ public class ServerClient
         return Bet;
     }
 
-    public void Play()
+    public async void Play()
     {
         List<string> activeClients = new();
         foreach (var client in Parent.Clients.Where(client => client.IsPlaying))
         {
             activeClients.Add(client.Username);
-            client.SendMessage(SendReplacedObject("user", Username, 1, "Response\\clientconnect.json")!);
+            await client.SendMessageAsync(SendReplacedObject("user", Username, 1, "Response\\clientconnect.json")!);
         }
-
-        SendMessage(SendReplacedObject("clients", activeClients.ToArray(), 1, "Response\\returnclients.json")!);
-
+        
+        await SendMessageAsync(SendReplacedObject("clients", activeClients.ToArray(), 1, "Response\\returnclients.json")!);
+        
         _log.Information("client " + Username + " can play");
         IsPlaying = true;
 
@@ -172,7 +172,7 @@ public class ServerClient
             status = 0;
         
 
-        SendMessage(SendReplacedObject("status", 0, 1, SendReplacedObject(
+        await SendMessageAsync(SendReplacedObject("status", 0, 1, SendReplacedObject(
             "money", Money, 1, SendReplacedObject(
                 "active", status, 1, "Response\\clientconnected.json"
             )
@@ -195,7 +195,7 @@ public class ServerClient
         }
     }
 
-    public int CalculateWin(int amountDealer, int? testTotal = null)
+    public async void CalculateWin(int amountDealer)
     {
         if (testTotal != null)
             _totalValue = testTotal.Value;
@@ -216,7 +216,7 @@ public class ServerClient
             winstatus = 2;
         }
 
-        SendMessage(SendReplacedObject("win", winstatus, 1, SendReplacedObject(
+        await SendMessageAsync(SendReplacedObject("win", winstatus, 1, SendReplacedObject(
             "balance", Money, 1, "Response\\winstatus.json"
         ))!);
         Bet = 0;

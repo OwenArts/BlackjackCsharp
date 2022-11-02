@@ -31,7 +31,7 @@ public class BetCommand : BaseCommand
             return;
         }
         _viewModel.Client.Bet(betInt);
-        if (_viewModel.Money < betInt) return;
+        if (_viewModel.Money < betInt && betInt > 0) return;
         _viewModel.Money -= betInt;
         _viewModel.GameStarted = true;
 
