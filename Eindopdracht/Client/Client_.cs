@@ -121,13 +121,13 @@ public class Client_
         }
     }
 
-    private void SendData(JObject message)
+    private async Task SendDataAsync(JObject message)
     {
         _log.Debug($"senddata: {message}");
         var encryptedMessage = GetEncryptedMessage(message);
         try
         {
-            _stream.Write(encryptedMessage, 0, encryptedMessage.Length);
+            await _stream.WriteAsync(encryptedMessage, 0, encryptedMessage.Length);
         }
         catch (Exception e)
         {
@@ -136,11 +136,11 @@ public class Client_
         }
     }
 
-    public void Stop(bool? destruct = false)
+    public async void Stop(bool? destruct = false)
     {
         if (!_tcpClient.Connected) return;
         LoggedIn = false;
-        SendData(SendReplacedObject("destruct", destruct, 1, "Requests\\disconnect.json")!);
+        await SendDataAsync(SendReplacedObject("destruct", destruct, 1, "Requests\\disconnect.json")!);
     }
 
     public void SelfDestruct()
@@ -156,7 +156,7 @@ public class Client_
 
     public async Task AskForLoginAsync()
     {
-        SendData(SendReplacedObject("username", Username, 1, SendReplacedObject(
+        await SendDataAsync(SendReplacedObject("username", Username, 1, SendReplacedObject(
             "password", Password, 1, "Requests\\connect.json"
         ))!);
     }
@@ -198,27 +198,27 @@ public class Client_
     {
         _log.Debug($"CreateAccountCommand(); Username: {Username}; Password {Password}");
         await MakeConnectionAsync(ip);
-        SendData(SendReplacedObject("username", Username, 1, SendReplacedObject(
+        await SendDataAsync(SendReplacedObject("username", Username, 1, SendReplacedObject(
             "password", Password, 1, "Requests\\createaccount.json"))!);
     }
 
-    public void Bet(int amount)
+    public async void Bet(int amount)
     {
-        SendData(SendReplacedObject("bet", amount, 1, "Requests\\createbet.json")!);
+        await SendDataAsync(SendReplacedObject("bet", amount, 1, "Requests\\createbet.json")!);
     }
 
-    public void Stand()
+    public async void Stand()
     {
-        SendData(GetJson("Requests\\calldeck.json"));
+        await SendDataAsync(GetJson("Requests\\calldeck.json"));
     }
 
-    public void RequestCard()
+    public async void RequestCard()
     {
-        SendData(GetJson("Requests\\requestcard.json"));
+        await SendDataAsync(GetJson("Requests\\requestcard.json"));
     }
 
-    public void DoubleDown()
+    public async void DoubleDown()
     {
-        SendData(GetJson("Requests\\doubledown.json"));
+        await SendDataAsync(GetJson("Requests\\doubledown.json"));
     }
 }
